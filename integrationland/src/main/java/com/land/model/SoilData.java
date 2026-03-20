@@ -31,6 +31,7 @@ public class SoilData {
     @JoinColumn(name = "land_id")
     private Land land;
 
+    @com.fasterxml.jackson.annotation.JsonIgnore
     @OneToMany(mappedBy = "soilData", cascade = CascadeType.ALL)
     private List<Recommendation> recommendations;
 }

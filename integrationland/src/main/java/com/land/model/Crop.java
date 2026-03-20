@@ -23,6 +23,7 @@ public class Crop {
 
     private String soilRequirement;
 
+    @com.fasterxml.jackson.annotation.JsonIgnore
     @OneToMany(mappedBy = "crop", cascade = CascadeType.ALL)
     private List<Recommendation> recommendations;
 }

@@ -183,11 +183,44 @@
             </div>
 
             <div class="cta-group">
-                <a href="/dashboard.html" class="btn btn-primary">Go to Dashboard</a>
-                <a href="/register.html" class="btn btn-outline">Create Account</a>
+                <button id="fetchLandsBtn" class="btn btn-primary">Fetch Lands (API Test)</button>
+                <button id="logoutBtn" class="btn btn-outline" style="cursor: pointer; background: none; font-size: 1rem; font-family: inherit;">Logout</button>
             </div>
+            <div id="apiResult" style="margin-top: 2rem; text-align: left; background: #f1f5f9; padding: 1rem; border-radius: 0.5rem; display: none;"></div>
         </div>
     </main>
+
+    <script>
+        if (!localStorage.getItem('jwtToken')) {
+            window.location.href = '/login.html';
+        }
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('jwtToken');
+            window.location.href = '/login.html?logout=true';
+        });
+
+        document.getElementById('fetchLandsBtn').addEventListener('click', async () => {
+            const token = localStorage.getItem('jwtToken');
+            try {
+                const response = await fetch('/api/lands', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('apiResult').style.display = 'block';
+                    document.getElementById('apiResult').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                } else if (response.status === 401 || response.status === 403) {
+                    localStorage.removeItem('jwtToken');
+                    window.location.href = '/login.html';
+                } else {
+                    alert('Failed to fetch lands.');
+                }
+            } catch (err) {
+                alert('Connection error');
+            }
+        });
+    </script>
 
     <footer>
         &copy; 2026 Integrated Land & Soil Management System | Built with Spring Boot & MySQL

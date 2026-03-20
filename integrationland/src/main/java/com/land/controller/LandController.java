@@ -1,12 +1,8 @@
 package com.land.controller;
 
-import com.land.dto.ApiResponse;
-import com.land.dto.LandRequest;
-import com.land.dto.LandResponse;
+import com.land.model.Land;
 import com.land.service.LandService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,37 +15,29 @@ public class LandController {
 
     private final LandService landService;
 
-    @PostMapping
-    public ResponseEntity<ApiResponse<LandResponse>> createLand(@Valid @RequestBody LandRequest request) {
-        LandResponse response = landService.createLand(request);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success("Land registered successfully", response));
-    }
-
     @GetMapping
-    public ResponseEntity<ApiResponse<List<LandResponse>>> getAllLands() {
-        return ResponseEntity.ok(ApiResponse.success(landService.getAllLands()));
+    public ResponseEntity<List<Land>> getAllLands() {
+        return ResponseEntity.ok(landService.getAllLands());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<LandResponse>> getLandById(@PathVariable Long id) {
-        return ResponseEntity.ok(ApiResponse.success(landService.getLandById(id)));
+    public ResponseEntity<Land> getLandById(@PathVariable Long id) {
+        return ResponseEntity.ok(landService.getLandById(id));
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<ApiResponse<List<LandResponse>>> getLandsByUser(@PathVariable Long userId) {
-        return ResponseEntity.ok(ApiResponse.success(landService.getLandsByUserId(userId)));
+    @PostMapping
+    public ResponseEntity<Land> createLand(@RequestBody Land land) {
+        return ResponseEntity.ok(landService.createLand(land));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<LandResponse>> updateLand(
-            @PathVariable Long id, @Valid @RequestBody LandRequest request) {
-        return ResponseEntity.ok(ApiResponse.success("Land updated successfully", landService.updateLand(id, request)));
+    public ResponseEntity<Land> updateLand(@PathVariable Long id, @RequestBody Land landDetails) {
+        return ResponseEntity.ok(landService.updateLand(id, landDetails));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteLand(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteLand(@PathVariable Long id) {
         landService.deleteLand(id);
-        return ResponseEntity.ok(ApiResponse.success("Land deleted successfully", null));
+        return ResponseEntity.ok().build();
     }
 }
