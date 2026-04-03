@@ -22,9 +22,15 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 
+        // enabled = approved — unapproved users cannot log in
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
                 user.getPassword(),
+                user.getStatus() == com.land.model.ApprovalStatus.APPROVED,   // enabled
+                true,                // accountNonExpired
+                true,                // credentialsNonExpired
+                true,                // accountNonLocked
                 Collections.singletonList(new SimpleGrantedAuthority(user.getRole())));
     }
 }
+

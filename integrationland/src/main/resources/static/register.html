@@ -4,133 +4,596 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Soil Management System</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <title>Create Account - Soil Management System</title>
+    <!-- Modern Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <style>
         :root {
-            --primary: #2e7d32;
-            --bg: #f8fafc;
+            --primary: #10b981;
+            --primary-hover: #059669;
+            --bg: #fdfdfd;
+            --sidebar-bg: #ecfdf5;
+            --text-main: #111827;
+            --text-muted: #6b7280;
+            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --ease: cubic-bezier(.4, 0, .2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Layout Structure */
+        .page-container {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+        }
+
+        /* Hero Section (Left) */
+        .hero-section {
+            flex: 1.1;
+            position: relative;
+            background: var(--sidebar-bg);
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            margin: 0;
+            overflow: hidden;
         }
 
-        .card {
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            left: -20%;
+            width: 140%;
+            height: 140%;
+            background: 
+                radial-gradient(circle at 30% 20%, rgba(16, 185, 129, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 70% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 40%);
+            z-index: 1;
+        }
+
+        .hero-image-container {
+            position: relative;
+            z-index: 2;
+            width: 80%;
+            height: 80%;
+            border-radius: 2rem;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 8px solid white;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scale(1.05);
+            transition: transform 0.5s ease;
+        }
+
+        /* Form Section (Right) */
+        .form-section {
+            flex: 0.9;
             background: white;
-            padding: 2.5rem;
-            border-radius: 1rem;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 450px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 4rem;
+            position: relative;
+            z-index: 5;
+            overflow-y: auto;
         }
 
-        h2 {
+        .form-card {
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .brand-logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
             color: var(--primary);
-            margin-bottom: 1.5rem;
-            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 2rem;
         }
 
-        .form-group {
-            margin-bottom: 1rem;
+        /* Steps Indicator */
+        .steps-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
         }
 
-        label {
-            display: block;
-            margin-bottom: 0.4rem;
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
             font-weight: 600;
-            color: #475569;
+            color: var(--text-muted);
+            transition: all 0.3s var(--ease);
         }
 
-        input,
-        select {
+        .step.active { color: var(--primary); }
+        .step.done { color: #059669; }
+
+        .btn-step {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            transition: all 0.3s;
+        }
+
+        .step.active .btn-step { background: var(--primary); color: white; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3); }
+        .step.done .btn-step { background: #d1fae5; color: var(--primary); }
+
+        .step-line {
+            flex: 1;
+            height: 2px;
+            background: #f3f4f6;
+            border-radius: 1px;
+            overflow: hidden;
+        }
+
+        .step-line-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.5s var(--ease);
+        }
+
+        /* Form Details */
+        .form-header { margin-bottom: 2rem; }
+        .form-header h2 { font-family: 'Outfit', sans-serif; font-size: 2rem; font-weight: 700; color: #1f2937; margin-bottom: 0.5rem; }
+        .form-header p { color: var(--text-muted); }
+
+        .panel { display: none; }
+        .panel.active { display: block; animation: slideUp 0.4s var(--ease); }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group { margin-bottom: 1.25rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-size: 0.875rem; font-weight: 600; color: #374151; }
+        
+        .input-wrap { position: relative; }
+        .input-wrap ion-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 1.2rem; }
+        
+        input, select {
             width: 100%;
-            padding: 0.7rem;
-            border: 1px solid #e2e8f0;
-            border-radius: 0.5rem;
+            padding: 0.875rem 1rem 0.875rem 2.75rem;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: all 0.2s;
             outline: none;
         }
 
-        button {
-            width: 100%;
-            padding: 0.75rem;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 1rem;
+        input:focus, select:focus {
+            background: white;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
         }
 
-        .msg {
-            margin-top: 1rem;
-            text-align: center;
-            font-size: 0.875rem;
+        /* OTP Boxes */
+        .otp-container { display: flex; gap: 0.75rem; justify-content: center; margin: 1.5rem 0; }
+        .otp-input {
+            width: 50px; height: 58px;
+            border: 2px solid #e5e7eb; border-radius: 0.75rem;
+            text-align: center; font-size: 1.5rem; font-weight: 700;
+            background: #f9fafb; outline: none; transition: all 0.2s;
+        }
+        .otp-input:focus { border-color: var(--primary); background: white; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.15); transform: scale(1.05); }
+
+        .btn-primary {
+            width: 100%; padding: 1rem;
+            background: var(--primary); color: white;
+            border: none; border-radius: 0.75rem;
+            font-size: 1rem; font-weight: 600;
+            cursor: pointer; transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+            margin-top: 1.5rem;
+        }
+
+        .btn-primary:hover:not(:disabled) { background: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 10px 15px rgba(16, 185, 129, 0.3); }
+        .btn-primary:active:not(:disabled) { transform: translateY(0); }
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        .alert {
+            padding: 0.875rem; border-radius: 0.75rem;
+            font-size: 0.875rem; margin-bottom: 1.5rem;
+            display: none; align-items: center; gap: 0.6rem;
+        }
+        .alert.error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+        .alert.success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .alert.show { display: flex; }
+
+        /* Loader Spinner */
+        .loader {
+            width: 18px; height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .btn-primary:disabled .loader { display: inline-block; }
+        .btn-primary:disabled .btn-text { display: none; }
+        .btn-primary:disabled ion-icon { display: none; }
+
+        .footer-text { margin-top: 2rem; text-align: center; color: var(--text-muted); font-size: 0.875rem; }
+        .footer-text a { color: var(--primary); font-weight: 600; text-decoration: none; }
+        .footer-text a:hover { text-decoration: underline; }
+
+        /* Mobile Adjustments */
+        @media (max-width: 1024px) {
+            .hero-section { display: none; }
+            .form-section { flex: 1; padding: 2.5rem 1.5rem; }
         }
     </style>
 </head>
 
 <body>
-    <div class="card">
-        <h2>Register Account</h2>
-        <form id="regForm">
-            <div class="form-group">
-                <label>Full Name</label>
-                <input type="text" id="fullName" required>
+    <div class="page-container">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="hero-image-container">
+                <img src="/assets/plant.png" alt="Growing Potential" class="hero-image">
             </div>
-            <div class="form-group">
-                <label>Email</label>
-                <input type="email" id="email" required>
+        </div>
+
+        <!-- Form Section -->
+        <div class="form-section">
+            <div class="form-card">
+                <div class="brand-logo">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                    </svg>
+                    IntegrationLand
+                </div>
+
+                <!-- Steps Indicator -->
+                <div class="steps-container">
+                    <div class="step active" id="step1-dot">
+                        <span class="btn-step">1</span> Setup
+                    </div>
+                    <div class="step-line"><div class="step-line-fill" id="line1"></div></div>
+                    <div class="step" id="step2-dot">
+                        <span class="btn-step">2</span> Verify
+                    </div>
+                    <div class="step-line"><div class="step-line-fill" id="line2"></div></div>
+                    <div class="step" id="step3-dot">
+                        <span class="btn-step">✓</span> Done
+                    </div>
+                </div>
+
+                <div class="panels">
+
+                    <!-- STEP 1: Registration form -->
+                    <div class="panel active" id="panel1">
+                        <div class="form-header">
+                            <h2>Join Our Network</h2>
+                            <p>Register your account to start managing your agricultural data.</p>
+                        </div>
+                        
+                        <div class="alert error" id="alert1">
+                            <ion-icon name="alert-circle-outline"></ion-icon>
+                            <span id="alert1-msg"></span>
+                        </div>
+
+                        <form id="regForm">
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <div class="input-wrap">
+                                    <ion-icon name="person-outline"></ion-icon>
+                                    <input type="text" id="fullName" placeholder="Alice Uwimana" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Email Address</label>
+                                <div class="input-wrap">
+                                    <ion-icon name="mail-outline"></ion-icon>
+                                    <input type="email" id="email" placeholder="alice@example.com" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Create Password</label>
+                                <div class="input-wrap">
+                                    <ion-icon name="lock-closed-outline"></ion-icon>
+                                    <input type="password" id="password" placeholder="At least 6 chars" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>User Role</label>
+                                <div class="input-wrap">
+                                    <ion-icon name="briefcase-outline"></ion-icon>
+                                    <select id="role">
+                                        <option value="ROLE_USER" selected>Data Entry User</option>
+                                        <option value="ROLE_OFFICER">Agricultural Officer</option>
+                                        <option value="ROLE_ADMIN">Administrator</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn-primary" id="sendOtpBtn">
+                                <span class="btn-text">Verify Email & Continue</span>
+                                <div class="loader"></div>
+                                <ion-icon name="arrow-forward-outline"></ion-icon>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- STEP 2: OTP Verification -->
+                    <div class="panel" id="panel2">
+                        <div class="form-header">
+                            <h2>Verify Identity</h2>
+                            <p>We've sent a 6-digit code to <strong id="email-preview"></strong>.</p>
+                        </div>
+
+                        <div class="alert error" id="alert2">
+                            <ion-icon name="alert-circle-outline"></ion-icon>
+                            <span id="alert2-msg"></span>
+                        </div>
+
+                        <div class="otp-container">
+                            <input class="otp-input" type="text" maxlength="1" id="o1">
+                            <input class="otp-input" type="text" maxlength="1" id="o2">
+                            <input class="otp-input" type="text" maxlength="1" id="o3">
+                            <input class="otp-input" type="text" maxlength="1" id="o4">
+                            <input class="otp-input" type="text" maxlength="1" id="o5">
+                            <input class="otp-input" type="text" maxlength="1" id="o6">
+                        </div>
+
+                        <button class="btn-primary" id="verifyBtn" disabled>
+                            <span class="btn-text">Complete Registration</span>
+                            <div class="loader"></div>
+                        </button>
+
+                        <div style="text-align: center; margin-top: 1.5rem; font-size: 0.875rem;">
+                            <span style="color: var(--text-muted);">Didn't receive a code?</span>
+                            <button id="resendBtn" disabled style="background: none; border: none; color: var(--primary); font-weight: 600; cursor: pointer;">
+                                Resend in <span id="countdown">10:00</span>
+                            </button>
+                        </div>
+                        
+                        <button id="backBtn" style="background: none; border: none; color: var(--text-muted); font-size: 0.875rem; margin-top: 1rem; width: 100%; cursor: pointer;">
+                            Wait, I entered the wrong email
+                        </button>
+                    </div>
+
+                    <!-- STEP 3: Success -->
+                    <div class="panel" id="panel3" style="text-align: center;">
+                        <div style="font-size: 4rem; margin-bottom: 1.5rem;">🌱</div>
+                        <h2>You're all set!</h2>
+                        <p style="margin: 1rem 0 2rem; color: var(--text-muted);">
+                            Account created successfully. You'll be redirected to the login page to sign in with your new credentials.
+                        </p>
+                        <a href="/login.html" class="btn-primary" style="text-decoration: none;">
+                            Go to Login
+                        </a>
+                    </div>
+
+                </div><!-- /panels -->
+
+                <div class="footer-text">
+                    Already have an account? <a href="/login.html">Sign in here</a>
+                </div>
             </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="password" required>
-            </div>
-            <div class="form-group">
-                <label>Role</label>
-                <select id="role">
-                    <option value="ROLE_ADMIN">Administrator</option>
-                    <option value="ROLE_OFFICER">Agricultural Officer</option>
-                    <option value="ROLE_USER">Data Entry User</option>
-                </select>
-            </div>
-            <button type="submit">Create Account</button>
-        </form>
-        <p class="msg" id="response"></p>
-        <div class="msg">
-            Already have an account? <a href="/login.html" style="color: var(--primary);">Login</a>
         </div>
     </div>
 
     <script>
-        document.getElementById('regForm').addEventListener('submit', async (e) => {
+        let pendingUser = {};
+        let countdownTimer = null;
+
+        function showPanel(n) {
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.getElementById('panel' + n).classList.add('active');
+
+            // Update steps
+            document.getElementById('step1-dot').className = 'step ' + (n > 1 ? 'done' : n === 1 ? 'active' : '');
+            document.getElementById('step2-dot').className = 'step ' + (n > 2 ? 'done' : n === 2 ? 'active' : '');
+            document.getElementById('step3-dot').className = 'step ' + (n === 3 ? 'done active' : '');
+            
+            document.getElementById('line1').style.width = n >= 2 ? '100%' : '0';
+            document.getElementById('line2').style.width = n >= 3 ? '100%' : '0';
+        }
+
+        function showAlert(panelId, msg, type) {
+            const el = document.getElementById('alert' + panelId);
+            const msgEl = document.getElementById('alert' + panelId + '-msg');
+            if (el && msgEl) {
+                el.className = 'alert ' + type + ' show';
+                msgEl.textContent = msg;
+            }
+        }
+
+        function hideAlert(panelId) {
+            const el = document.getElementById('alert' + panelId);
+            if (el) el.classList.remove('show');
+        }
+
+        // --- STEP 1: Process Registration ---
+        document.getElementById('regForm')?.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const data = {
-                fullName: document.getElementById('fullName').value,
-                email: document.getElementById('email').value,
-                password: document.getElementById('password').value,
-                role: document.getElementById('role').value
-            };
+            hideAlert(1);
+            
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const role = document.getElementById('role').value;
 
-            const response = await fetch('/api/auth/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
+            if (!fullName || !email || !password) {
+                showAlert(1, 'Please fill in all fields.', 'error');
+                return;
+            }
+            if (password.length < 6) {
+                showAlert(1, 'Password must be at least 6 characters.', 'error');
+                return;
+            }
 
-            const result = await response.text();
-            document.getElementById('response').innerText = result;
-            if (response.ok) {
-                setTimeout(() => window.location.href = '/login.html', 2000);
+            const btn = document.getElementById('sendOtpBtn');
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/auth/send-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                
+                if (res.ok) {
+                    pendingUser = { fullName, email, password, role };
+                    document.getElementById('email-preview').textContent = email;
+                    showPanel(2);
+                    startCountdown(600);
+                } else {
+                    const error = await res.text();
+                    showAlert(1, error || 'Failed to send OTP.', 'error');
+                    btn.disabled = false;
+                }
+            } catch (err) {
+                showAlert(1, 'Connection error.', 'error');
+                btn.disabled = false;
             }
         });
+
+        // OTP Input Handling
+        const otpBoxes = Array.from(document.querySelectorAll('.otp-input'));
+        otpBoxes.forEach((box, i) => {
+            box.oninput = () => {
+                box.value = box.value.replace(/\D/g, '');
+                if (box.value && i < 5) otpBoxes[i+1].focus();
+                checkOtp();
+            }
+            box.onkeydown = (e) => {
+                if (e.key === 'Backspace' && !box.value && i > 0) otpBoxes[i-1].focus();
+            }
+        });
+        
+        function checkOtp() {
+            const val = otpBoxes.map(b => b.value).join('');
+            const verifyBtn = document.getElementById('verifyBtn');
+            if (verifyBtn) verifyBtn.disabled = val.length !== 6;
+        }
+
+        // --- STEP 2: Verify ---
+        const verifyBtn = document.getElementById('verifyBtn');
+        if (verifyBtn) {
+            verifyBtn.onclick = async () => {
+                const otpCode = otpBoxes.map(b => b.value).join('');
+                verifyBtn.disabled = true;
+                hideAlert(2);
+
+                try {
+                    const res = await fetch('/api/auth/register', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ ...pendingUser, otp: otpCode })
+                    });
+
+                    if (res.ok) {
+                        clearInterval(countdownTimer);
+                        showPanel(3);
+                        setTimeout(() => { window.location.href = '/login.html'; }, 3000);
+                    } else {
+                        const error = await res.text();
+                        showAlert(2, error || 'Verification failed.', 'error');
+                        verifyBtn.disabled = false;
+                    }
+                } catch (err) {
+                    showAlert(2, 'Error connecting.', 'error');
+                    verifyBtn.disabled = false;
+                }
+            };
+        }
+
+        // Resend logic
+        const resendBtn = document.getElementById('resendBtn');
+        if (resendBtn) {
+            resendBtn.onclick = async () => {
+                resendBtn.disabled = true;
+                try {
+                    const res = await fetch('/api/auth/send-otp', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: pendingUser.email })
+                    });
+                    if (res.ok) {
+                        startCountdown(600);
+                        showAlert(2, 'Code resent successfully.', 'success');
+                    } else {
+                        resendBtn.disabled = false;
+                    }
+                } catch { resendBtn.disabled = false; }
+            };
+        }
+
+        document.getElementById('backBtn') ? document.getElementById('backBtn').onclick = () => showPanel(1) : null;
+
+        function startCountdown(secs) {
+            clearInterval(countdownTimer);
+            const btn = document.getElementById('resendBtn');
+            const span = document.getElementById('countdown');
+            if (!btn || !span) return;
+            btn.disabled = true;
+            let time = secs;
+            countdownTimer = setInterval(() => {
+                const m = Math.floor(time / 60);
+                const s = time % 60;
+                span.textContent = `${m}:${s < 10 ? '0' : ''}${s}`;
+                if (time-- <= 0) {
+                    clearInterval(countdownTimer);
+                    btn.disabled = false;
+                    span.textContent = "Resend Code";
+                }
+            }, 1000);
+        }
     </script>
 </body>
 

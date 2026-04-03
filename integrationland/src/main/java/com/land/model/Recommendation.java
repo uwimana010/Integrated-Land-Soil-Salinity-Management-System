@@ -3,6 +3,8 @@ package com.land.model;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "recommendation")
@@ -16,9 +18,11 @@ public class Recommendation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long recommendationId;
 
+    @NotBlank(message = "Recommendation details are required")
     @Column(columnDefinition = "TEXT")
     private String recommendationDetails;
 
+    @NotNull(message = "Recommendation date is required")
     private LocalDate recommendationDate;
 
     @ManyToOne

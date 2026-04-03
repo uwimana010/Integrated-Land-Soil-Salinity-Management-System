@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Database - Land & Soil</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <style>
+        :root {
+            --primary: #10b981; --primary-dark: #059669; --secondary: #3b82f6; --bg-body: #f1f5f9;
+            --glass-bg: rgba(255, 255, 255, 0.7); --glass-border: rgba(255, 255, 255, 0.5);
+            --text-main: #1e293b; --text-muted: #64748b; --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+
+        body {
+            background-color: var(--bg-body);
+            background-image: radial-gradient(at 0% 0%, hsla(152,100%,74%,0.15) 0px, transparent 50%), radial-gradient(at 100% 100%, hsla(217,100%,74%,0.15) 0px, transparent 50%);
+            background-attachment: fixed; color: var(--text-main); display: flex; min-height: 100vh;
+        }
+
+        /* Sidebar - Same as index.html */
+        .sidebar {
+            width: 260px; background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border-right: 1px solid var(--glass-border); display: flex; flex-direction: column; padding: 2rem 1.5rem; position: fixed; height: 100vh; z-index: 100;
+        }
+        .brand { display: flex; align-items: center; gap: 0.75rem; font-size: 1.5rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 3rem; }
+        .brand ion-icon { font-size: 2rem; color: var(--primary); }
+        .nav-links { display: flex; flex-direction: column; gap: 0.5rem; flex-grow: 1; }
+        .nav-link { display: flex; align-items: center; gap: 1rem; padding: 0.85rem 1.25rem; border-radius: 0.75rem; color: var(--text-muted); text-decoration: none; font-weight: 500; transition: var(--transition); }
+        .nav-link:hover, .nav-link.active { background: white; color: var(--primary-dark); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .nav-link ion-icon { font-size: 1.25rem; }
+
+        /* Main Content */
+        .main-content { margin-left: 260px; flex-grow: 1; padding: 2.5rem 3rem; max-width: 1400px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; }
+        .header h1 { font-size: 2.25rem; font-weight: 700; letter-spacing: -0.025em; }
+
+        /* Glass Card */
+        .glass-card { background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: 1.25rem; padding: 2rem; box-shadow: var(--card-shadow); }
+
+        /* Table */
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 1rem; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { font-weight: 600; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        td { color: var(--text-main); font-weight: 500;}
+        tr:last-child td { border-bottom: none; }
+
+        /* Buttons */
+        .btn-action { padding: 0.4rem 0.8rem; border-radius: 0.5rem; border: none; cursor: pointer; font-size: 0.85rem; font-weight: 600; margin-right: 0.5rem; transition: var(--transition); }
+        .btn-edit { background: #e0e7ff; color: #4338ca; }
+        .btn-edit:hover { background: #6366f1; color: white; }
+        .btn-delete { background: #fee2e2; color: #dc2626; }
+        .btn-delete:hover { background: #f87171; color: white; }
+        .btn { padding: 0.75rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; border: none; transition: var(--transition); display: inline-flex; align-items: center; gap: 0.5rem; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
+        .btn-primary:hover { transform: translateY(-2px); }
+        .btn-secondary { background: white; color: var(--text-main); border: 1px solid #e2e8f0; }
+
+        /* Forms */
+        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1rem; }
+        .form-group label { display: block; font-size: 0.875rem; font-weight:500; margin-bottom: 0.4rem; color:var(--text-muted);}
+        .form-group input, .form-group select { width: 100%; padding: 0.75rem 1rem; border: 1px solid #cbd5e1; border-radius: 0.5rem; outline:none; transition: var(--transition); }
+        
+        .badge { padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.75rem; font-weight: 700; display: inline-block; background: #e2e8f0; color: #475569; }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="brand"><ion-icon name="leaf"></ion-icon> LandSoil</div>
+        <div class="nav-links">
+            <a href="/dashboard.html" class="nav-link"><ion-icon name="grid-outline"></ion-icon> Dashboard</a>
+            <a href="/crops.html" class="nav-link active"><ion-icon name="leaf-outline"></ion-icon> Crop Database</a>
+            <a href="/report.html" class="nav-link"><ion-icon name="pie-chart-outline"></ion-icon> Reports</a>
+            <a href="/admin.html" class="nav-link" id="navAdmin" style="display:none;"><ion-icon name="shield-checkmark"></ion-icon> Admin Station</a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="header">
+            <div>
+                <h1>Crop Database</h1>
+                <p style="color: var(--text-muted);">Manage recommended crops, salinity tolerance, and required soil types.</p>
+            </div>
+            <div>
+                <button id="addCropBtn" class="btn btn-primary"><ion-icon name="add"></ion-icon> Add New Crop</button>
+            </div>
+        </div>
+
+        <!-- Add/Edit Crop Form -->
+        <div class="glass-card" id="cropFormCard" style="display:none; margin-bottom: 2rem; border: 2px solid var(--primary);">
+            <h3 id="formTitle" style="margin-bottom:1rem; display:flex; gap:0.5rem; align-items:center;"><ion-icon name="leaf"></ion-icon> Add New Crop</h3>
+            <form id="cropForm">
+                <input type="hidden" id="cropId">
+                <div class="form-grid">
+                    <div class="form-group"><label>Crop Name</label><input type="text" id="cropName" placeholder="e.g. Wheat" required></div>
+                    <div class="form-group"><label>Salinity Tolerance</label>
+                        <select id="salinityTolerance" required>
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Associated Soil Requirement</label><input type="text" id="soilRequirement" placeholder="e.g. Clay, Sandy" required></div>
+                </div>
+                <div style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('cropFormCard').style.display='none'">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Crop Details</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="glass-card" style="padding: 1rem 2rem;">
+            <table id="cropsTable">
+                <thead><tr><th>ID</th><th>Crop Species Name</th><th>Salinity Tolerance</th><th>Required Soil Type</th><th>Capabilities</th></tr></thead>
+                <tbody id="cropsList">
+                    <tr><td colspan="5" style="text-align:center; padding: 2rem;">Loading crops...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script>
+        const API_URL = '/api/crops';
+        const token = localStorage.getItem('jwtToken');
+        const role = localStorage.getItem('userRole');
+        
+        if (!token || (role !== 'ROLE_ADMIN' && role !== 'ROLE_OFFICER')) { 
+            window.location.href = '/index.html'; 
+        }
+
+        if (role === 'ROLE_ADMIN') {
+            document.getElementById('navAdmin').style.display = 'flex';
+        }
+
+        const headers = { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' };
+
+        async function fetchCrops() {
+            try {
+                const res = await fetch(API_URL, { headers });
+                if (res.ok) {
+                    const crops = await res.json();
+                    renderCrops(crops);
+                }
+            } catch (err) {}
+        }
+
+        function getToleranceBadge(level) {
+            if(level === 'High') return '<span class="badge" style="background:#fee2e2; color:#dc2626;">High</span>';
+            if(level === 'Medium') return '<span class="badge" style="background:#fef3c7; color:#d97706;">Medium</span>';
+            return '<span class="badge" style="background:#d1fae5; color:#059669;">Low</span>';
+        }
+
+        function renderCrops(crops) {
+            const tbody = document.getElementById('cropsList');
+            tbody.innerHTML = '';
+            if(crops.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:2rem; color:gray;">No crop records found.</td></tr>';
+                return;
+            }
+            crops.forEach(crop => {
+                const tr = document.createElement('tr');
+                const id = crop.cropId || crop.id;
+                tr.innerHTML = `
+                    <td><strong style="color:var(--text-muted)">#${id}</strong></td>
+                    <td style="font-weight:600; font-size:1.05rem;"><ion-icon name="leaf" style="color:var(--primary);"></ion-icon> ${crop.cropName}</td>
+                    <td>${getToleranceBadge(crop.salinityTolerance)}</td>
+                    <td>${crop.soilRequirement}</td>
+                    <td>
+                        <button class="btn-action btn-edit" onclick="editCrop(${id}, '${crop.cropName.replace(/'/g, "\\'")}', '${crop.salinityTolerance}', '${crop.soilRequirement.replace(/'/g, "\\'")}')">Modify</button>
+                        <button class="btn-action btn-delete" onclick="deleteCrop(${id})">Remove</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        document.getElementById('addCropBtn').addEventListener('click', () => {
+            document.getElementById('cropForm').reset();
+            document.getElementById('cropId').value = '';
+            document.getElementById('formTitle').innerHTML = '<ion-icon name="leaf"></ion-icon> Register New Crop';
+            document.getElementById('cropFormCard').style.display = 'block';
+            document.getElementById('cropFormCard').scrollIntoView({behavior:'smooth'});
+        });
+
+        window.editCrop = (id, name, tol, soil) => {
+            document.getElementById('cropId').value = id;
+            document.getElementById('cropName').value = name;
+            document.getElementById('salinityTolerance').value = tol;
+            document.getElementById('soilRequirement').value = soil;
+            document.getElementById('formTitle').innerHTML = '<ion-icon name="create"></ion-icon> Update Crop Conditions';
+            document.getElementById('cropFormCard').style.display = 'block';
+            document.getElementById('cropFormCard').scrollIntoView({behavior:'smooth'});
+        };
+
+        document.getElementById('cropForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('cropId').value;
+            const data = {
+                cropName: document.getElementById('cropName').value,
+                salinityTolerance: document.getElementById('salinityTolerance').value,
+                soilRequirement: document.getElementById('soilRequirement').value
+            };
+            const isUpdate = !!id;
+            const url = isUpdate ? `${API_URL}/${id}` : API_URL;
+            const method = isUpdate ? 'PUT' : 'POST';
+            try {
+                const res = await fetch(url, { method: method, headers: headers, body: JSON.stringify(data) });
+                if (res.ok) {
+                    document.getElementById('cropFormCard').style.display = 'none';
+                    alert(isUpdate ? 'Crop updated successfully!' : 'Crop registered successfully!');
+                    fetchCrops();
+                } else {
+                    alert('Error saving crop.');
+                }
+            } catch (err) { alert('Request failed.'); }
+        });
+
+        window.deleteCrop = async (id) => {
+            if(!confirm('Are you certain you want to remove this crop from the database? It will no longer be recommended to users.')) return;
+            try {
+                const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE', headers });
+                if (res.ok) { fetchCrops(); } else { alert('Error removing crop'); }
+            } catch (err) { alert('Request failed'); }
+        };
+
+        fetchCrops();
+    </script>
+</body>
+</html>

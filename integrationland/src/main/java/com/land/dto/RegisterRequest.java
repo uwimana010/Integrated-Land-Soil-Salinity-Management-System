@@ -21,4 +21,7 @@ public class RegisterRequest {
 
     @NotBlank
     private String role; // ROLE_ADMIN, ROLE_OFFICER, ROLE_USER
+
+    @NotBlank
+    private String otp; // 6-digit OTP from email
 }

@@ -5,6 +5,7 @@ import com.land.service.CropService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -16,7 +17,15 @@ public class CropController {
     private final CropService cropService;
 
     @GetMapping
-    public ResponseEntity<List<Crop>> getAllCrops() {
+    public ResponseEntity<List<Crop>> getAllCrops(
+            @RequestParam(required = false) String salinityTolerance,
+            @RequestParam(required = false) String soilRequirement) {
+        if (salinityTolerance != null && !salinityTolerance.isEmpty()) {
+            return ResponseEntity.ok(cropService.getCropsBySalinityTolerance(salinityTolerance));
+        }
+        if (soilRequirement != null && !soilRequirement.isEmpty()) {
+            return ResponseEntity.ok(cropService.getCropsBySoilRequirement(soilRequirement));
+        }
         return ResponseEntity.ok(cropService.getAllCrops());
     }
 
@@ -26,12 +35,12 @@ public class CropController {
     }
 
     @PostMapping
-    public ResponseEntity<Crop> createCrop(@RequestBody Crop crop) {
+    public ResponseEntity<Crop> createCrop(@Valid @RequestBody Crop crop) {
         return ResponseEntity.ok(cropService.createCrop(crop));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Crop> updateCrop(@PathVariable Long id, @RequestBody Crop cropDetails) {
+    public ResponseEntity<Crop> updateCrop(@PathVariable Long id, @Valid @RequestBody Crop cropDetails) {
         return ResponseEntity.ok(cropService.updateCrop(id, cropDetails));
     }
 

@@ -17,6 +17,10 @@ public class LandService {
         return landRepository.findAll();
     }
 
+    public List<Land> getLandsByType(String landType) {
+        return landRepository.findByLandType(landType);
+    }
+
     public Land getLandById(Long id) {
         return landRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Land not found with id " + id));

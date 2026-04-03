@@ -17,6 +17,22 @@ public class SoilDataService {
         return soilDataRepository.findAll();
     }
 
+    public List<SoilData> getSoilDataByType(String soilType) {
+        return soilDataRepository.findBySoilType(soilType);
+    }
+
+    public List<SoilData> getSoilDataByMoistureRange(Float min, Float max) {
+        return soilDataRepository.findByMoistureLevelBetween(min, max);
+    }
+
+    public List<SoilData> getSoilDataByLandId(Long landId) {
+        return soilDataRepository.findByLand_LandId(landId);
+    }
+
+    public List<SoilData> getSoilDataByDateRange(java.time.LocalDate start, java.time.LocalDate end) {
+        return soilDataRepository.findByRecordDateBetween(start, end);
+    }
+
     public SoilData getSoilDataById(Long id) {
         return soilDataRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("SoilData not found with id " + id));

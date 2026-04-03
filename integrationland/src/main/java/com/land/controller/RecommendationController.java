@@ -1,10 +1,12 @@
 package com.land.controller;
 
 import com.land.model.Recommendation;
+import com.land.service.RecommendationEngineService;
 import com.land.service.RecommendationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -14,6 +16,13 @@ import java.util.List;
 public class RecommendationController {
 
     private final RecommendationService recommendationService;
+    private final RecommendationEngineService recommendationEngineService;
+
+    @PostMapping("/generate/{soilId}")
+    public ResponseEntity<String> generateRecommendations(@PathVariable Long soilId) {
+        String result = recommendationEngineService.generateRecommendationsForSoil(soilId);
+        return ResponseEntity.ok(result);
+    }
 
     @GetMapping
     public ResponseEntity<List<Recommendation>> getAllRecommendations() {
@@ -26,12 +35,12 @@ public class RecommendationController {
     }
 
     @PostMapping
-    public ResponseEntity<Recommendation> createRecommendation(@RequestBody Recommendation recommendation) {
+    public ResponseEntity<Recommendation> createRecommendation(@Valid @RequestBody Recommendation recommendation) {
         return ResponseEntity.ok(recommendationService.createRecommendation(recommendation));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Recommendation> updateRecommendation(@PathVariable Long id, @RequestBody Recommendation details) {
+    public ResponseEntity<Recommendation> updateRecommendation(@PathVariable Long id, @Valid @RequestBody Recommendation details) {
         return ResponseEntity.ok(recommendationService.updateRecommendation(id, details));
     }
 

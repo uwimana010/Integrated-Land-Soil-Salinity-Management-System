@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Entry — LandSoil System</title>
+    <meta name="description" content="Data Entry User portal for registering and managing land plots and soil records.">
+    <!-- Google Fonts (same as dashboard) -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Ionicons (same as dashboard) -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <style>
+        /* ══════════════════════════════════════════
+           DESIGN TOKENS — identical to index.html
+        ══════════════════════════════════════════ */
+        :root {
+            --primary:       #10b981;
+            --primary-dark:  #059669;
+            --secondary:     #3b82f6;
+            --danger:        #ef4444;
+            --warning:       #f59e0b;
+            --bg-body:       #f1f5f9;
+            --glass-bg:      rgba(255, 255, 255, 0.7);
+            --glass-border:  rgba(255, 255, 255, 0.5);
+            --text-main:     #1e293b;
+            --text-muted:    #64748b;
+            --card-shadow:   0 10px 30px -10px rgba(0, 0, 0, 0.05);
+            --transition:    all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+
+        body {
+            background-color: var(--bg-body);
+            background-image:
+                radial-gradient(at 0% 0%,   hsla(152,100%,74%,0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, hsla(217,100%,74%,0.15) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ── Sidebar (identical to index.html) ── */
+        .sidebar {
+            width: 260px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-right: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem 1.5rem;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex; align-items: center; gap: .75rem;
+            font-size: 1.5rem; font-weight: 700;
+            color: var(--primary-dark); margin-bottom: 3rem;
+        }
+        .brand ion-icon { font-size: 2rem; color: var(--primary); }
+
+        .nav-links { display: flex; flex-direction: column; gap: .5rem; flex-grow: 1; }
+
+        .nav-link {
+            display: flex; align-items: center; gap: 1rem;
+            padding: .85rem 1.25rem; border-radius: .75rem;
+            color: var(--text-muted); text-decoration: none;
+            font-weight: 500; transition: var(--transition);
+        }
+        .nav-link:hover, .nav-link.active {
+            background: white;
+            color: var(--primary-dark);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,.05);
+        }
+        .nav-link ion-icon { font-size: 1.25rem; }
+
+        .user-profile {
+            display: flex; align-items: center; gap: 1rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(0,0,0,.05);
+        }
+        .avatar {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: var(--primary); color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 600;
+        }
+
+        /* ── Main Content (identical to index.html) ── */
+        .main-content {
+            margin-left: 260px;
+            flex-grow: 1;
+            padding: 2.5rem 3rem;
+            max-width: 1400px;
+        }
+
+        .header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 2.5rem;
+        }
+        .header h1 {
+            font-size: 2.25rem; font-weight: 700; letter-spacing: -0.025em;
+        }
+        .header p { color: var(--text-muted); margin-top: .3rem; }
+
+        /* ── Buttons (identical to index.html) ── */
+        .btn {
+            padding: .75rem 1.5rem; border-radius: 50px;
+            font-weight: 600; cursor: pointer; border: none;
+            transition: var(--transition);
+            display: inline-flex; align-items: center; gap: .5rem;
+            font-size: .95rem; font-family: 'Outfit', sans-serif;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(16,185,129,.3);
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(16,185,129,.4); }
+
+        .btn-secondary {
+            background: white; color: var(--text-main);
+            box-shadow: 0 2px 5px rgba(0,0,0,.05);
+            border: 1px solid #e2e8f0;
+        }
+        .btn-secondary:hover { background: #f8fafc; }
+
+        .btn-danger {
+            background: rgba(239,68,68,.1); color: var(--danger);
+            border: 1px solid rgba(239,68,68,.2);
+        }
+        .btn-danger:hover { background: rgba(239,68,68,.2); }
+
+        .btn-sm { padding: .4rem .9rem; font-size: .8rem; }
+
+        /* ── Stats Cards ── */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+        .stat-card {
+            background: white; border-radius: 1.25rem;
+            padding: 1.5rem; box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            border: 1px solid transparent;
+        }
+        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -10px rgba(0,0,0,.08); border-color: rgba(16,185,129,.15); }
+        .stat-icon {
+            width: 44px; height: 44px; border-radius: 1rem;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem; margin-bottom: .75rem;
+        }
+        .stat-icon.green  { background: rgba(16,185,129,.12); color: var(--primary); }
+        .stat-icon.blue   { background: rgba(59,130,246,.12);  color: var(--secondary); }
+        .stat-icon.amber  { background: rgba(245,158,11,.12);  color: var(--warning); }
+        .stat-icon.red    { background: rgba(239,68,68,.12);   color: var(--danger); }
+        .stat-value { font-size: 2rem; font-weight: 700; line-height: 1; color: var(--text-main); }
+        .stat-label { font-size: .8rem; color: var(--text-muted); margin-top: .35rem; font-weight: 500; }
+
+        /* ── Tabs ── */
+        .tabs {
+            display: flex; gap: .5rem;
+            background: white; border: 1px solid #e2e8f0;
+            border-radius: 50px; padding: .35rem;
+            width: fit-content; margin-bottom: 2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,.04);
+        }
+        .tab-btn {
+            padding: .6rem 1.4rem; border-radius: 50px;
+            border: none; background: none;
+            color: var(--text-muted); font-family: 'Outfit', sans-serif;
+            font-weight: 600; font-size: .9rem; cursor: pointer;
+            display: flex; align-items: center; gap: .5rem;
+            transition: var(--transition);
+        }
+        .tab-btn:hover { color: var(--text-main); }
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 4px 12px rgba(16,185,129,.3);
+        }
+        .tab-btn ion-icon { font-size: 1.1rem; }
+
+        .tab-panel { display: none; animation: fadeIn .35s ease-out; }
+        .tab-panel.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── Glass Card (same as index.html forms) ── */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 2rem;
+        }
+        .glass-card-title {
+            display: flex; align-items: center; gap: .6rem;
+            font-size: 1.1rem; font-weight: 700;
+            margin-bottom: 1.5rem; color: var(--text-main);
+        }
+        .glass-card-title ion-icon { color: var(--primary); font-size: 1.3rem; }
+
+        /* ── Form (same as index.html) ── */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.25rem;
+        }
+        .form-group { display: flex; flex-direction: column; gap: .45rem; }
+        .form-group.full { grid-column: 1/-1; }
+        .form-group label {
+            font-size: .875rem; font-weight: 500; color: var(--text-muted);
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%; padding: .85rem 1rem;
+            border: 1px solid #cbd5e1; border-radius: .75rem;
+            background: rgba(255,255,255,.8); outline: none;
+            font-family: 'Outfit', sans-serif; font-size: .95rem;
+            color: var(--text-main);
+            transition: var(--transition);
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(16,185,129,.1);
+        }
+        .form-group select { cursor: pointer; }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        .form-actions {
+            display: flex; gap: .75rem; justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+
+        /* Range slider */
+        .range-row { display: flex; align-items: center; gap: .75rem; }
+        .range-row input[type=range] {
+            flex: 1; padding: 0; height: 6px;
+            background: #e2e8f0; border-radius: 999px;
+            border: none; cursor: pointer; outline: none;
+            accent-color: var(--primary);
+        }
+        .range-val { min-width: 52px; text-align: right; font-weight: 700; color: var(--primary-dark); }
+
+        /* ── Table card (white bg, like land-card) ── */
+        .table-card {
+            background: white; border-radius: 1.5rem;
+            box-shadow: var(--card-shadow);
+            border: 1px solid transparent; overflow: hidden;
+        }
+        .table-toolbar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #f1f5f9;
+            gap: 1rem; flex-wrap: wrap;
+        }
+        .table-toolbar-title {
+            display: flex; align-items: center; gap: .6rem;
+            font-weight: 700; font-size: 1rem; color: var(--text-main);
+        }
+        .table-toolbar-title ion-icon { color: var(--primary); }
+        .search-box {
+            display: flex; align-items: center; gap: .5rem;
+            background: #f8fafc; border: 1px solid #e2e8f0;
+            border-radius: .75rem; padding: .5rem 1rem;
+        }
+        .search-box ion-icon { color: var(--text-muted); font-size: 1rem; }
+        .search-box input {
+            background: none; border: none; outline: none;
+            color: var(--text-main); font-family: 'Outfit', sans-serif;
+            font-size: .9rem; width: 200px;
+        }
+        .search-box input::placeholder { color: #94a3b8; }
+
+        table { width: 100%; border-collapse: collapse; }
+        thead th {
+            padding: .85rem 1.25rem; text-align: left;
+            font-size: .75rem; font-weight: 600;
+            color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em;
+            background: #f8fafc;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        tbody tr { border-bottom: 1px solid #f1f5f9; transition: background .15s; }
+        tbody tr:last-child { border-bottom: none; }
+        tbody tr:hover { background: #f8fafc; }
+        td { padding: 1rem 1.25rem; font-size: .9rem; vertical-align: middle; }
+
+        .badge {
+            display: inline-flex; align-items: center;
+            padding: .25rem .75rem; border-radius: 999px;
+            font-size: .75rem; font-weight: 600;
+        }
+        .badge-green  { background: rgba(16,185,129,.12);  color: var(--primary-dark); }
+        .badge-blue   { background: rgba(59,130,246,.12);  color: #1d4ed8; }
+        .badge-amber  { background: rgba(245,158,11,.12);  color: #92400e; }
+        .badge-red    { background: rgba(239,68,68,.12);   color: #991b1b; }
+
+        .td-actions { display: flex; gap: .4rem; }
+
+        /* ── Progress bar ── */
+        .progress-bar { display: flex; align-items: center; gap: .65rem; min-width: 130px; }
+        .progress-track { flex: 1; height: 6px; background: #e2e8f0; border-radius: 999px; overflow: hidden; }
+        .progress-fill  { height: 100%; border-radius: 999px; transition: width .4s; }
+        .pf-green  { background: linear-gradient(90deg, var(--primary), #34d399); }
+        .pf-amber  { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+        .pf-red    { background: linear-gradient(90deg, var(--danger), #f87171); }
+        .pf-blue   { background: linear-gradient(90deg, var(--secondary), #60a5fa); }
+
+        /* ── Empty state ── */
+        .empty-state {
+            text-align: center; padding: 4rem 2rem; color: var(--text-muted);
+        }
+        .empty-state ion-icon { font-size: 3.5rem; color: #cbd5e1; display: block; margin-bottom: 1rem; }
+        .empty-state h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: .4rem; }
+
+        /* ── Spinner ── */
+        .spinner { display: flex; justify-content: center; align-items: center; padding: 3rem; gap: .75rem; color: var(--text-muted); }
+        .spin { animation: rotate 1s linear infinite; display: block; font-size: 1.5rem; }
+        @keyframes rotate { to { transform: rotate(360deg); } }
+
+        /* ── Toast ── */
+        #toast {
+            position: fixed; bottom: 2rem; right: 2rem; z-index: 9999;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem; padding: 1rem 1.5rem;
+            display: flex; align-items: center; gap: .85rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,.12);
+            transform: translateY(120%); opacity: 0;
+            transition: transform .4s cubic-bezier(.4,0,.2,1), opacity .4s;
+            max-width: 380px;
+        }
+        #toast.show { transform: translateY(0); opacity: 1; }
+        #toast.success { border-left: 4px solid var(--primary); }
+        #toast.error   { border-left: 4px solid var(--danger); }
+        .toast-icon { font-size: 1.4rem; flex-shrink: 0; }
+        .toast-icon.success { color: var(--primary); }
+        .toast-icon.error   { color: var(--danger); }
+        .toast-msg { font-size: .9rem; font-weight: 500; color: var(--text-main); }
+
+        /* ── Confirm overlay ── */
+        .modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,.35);
+            backdrop-filter: blur(4px);
+            z-index: 500;
+            display: none; align-items: center; justify-content: center;
+            padding: 1rem;
+        }
+        .modal-overlay.open { display: flex; }
+
+        .confirm-box {
+            background: white; border: 1px solid #e2e8f0;
+            border-radius: 1.5rem; padding: 2.25rem; text-align: center;
+            max-width: 400px; width: 100%;
+            box-shadow: 0 24px 60px rgba(0,0,0,.12);
+            animation: fadeIn .3s ease-out;
+        }
+        .danger-icon {
+            width: 56px; height: 56px;
+            background: rgba(239,68,68,.1); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.75rem; color: var(--danger);
+            margin: 0 auto 1.25rem;
+        }
+        .confirm-box h3 { font-size: 1.15rem; margin-bottom: .5rem; }
+        .confirm-box p  { color: var(--text-muted); font-size: .9rem; margin-bottom: 1.5rem; }
+        .confirm-actions { display: flex; gap: .75rem; justify-content: center; }
+    </style>
+</head>
+<body>
+
+<!-- ── Sidebar (matches index.html exactly) ── -->
+<aside class="sidebar">
+    <div class="brand">
+        <ion-icon name="leaf"></ion-icon>
+        LandSoil
+    </div>
+    <div class="nav-links">
+        <a href="/dashboard.html" class="nav-link">
+            <ion-icon name="grid-outline"></ion-icon> Dashboard
+        </a>
+        <a href="/data-entry.html" class="nav-link active">
+            <ion-icon name="create-outline"></ion-icon> Data Entry
+        </a>
+        <a href="/report.html"  class="nav-link" id="navReport" style="display:none;">
+            <ion-icon name="pie-chart-outline"></ion-icon> Reports
+        </a>
+        <a href="/crops.html"   class="nav-link" id="navCrops"  style="display:none;">
+            <ion-icon name="leaf-outline"></ion-icon> Crop Database
+        </a>
+        <a href="/admin.html"   class="nav-link" id="navAdmin"  style="display:none;">
+            <ion-icon name="people-outline"></ion-icon> Admin Panel
+        </a>
+    </div>
+    <div class="user-profile">
+        <div class="avatar" id="userAvatar">U</div>
+        <div>
+            <div style="font-weight:600; font-size:.95rem; line-height:1.2;" id="userEmailDisplay">Loading…</div>
+            <div style="font-size:.8rem; color:var(--text-muted);" id="userRoleDisplay">Role</div>
+        </div>
+        <a href="#" id="logoutBtn" style="margin-left:auto; color:#ef4444; font-size:1.25rem;">
+            <ion-icon name="log-out-outline"></ion-icon>
+        </a>
+    </div>
+</aside>
+
+<!-- ── Main Content ── -->
+<main class="main-content">
+
+    <!-- Header -->
+    <div class="header">
+        <div>
+            <h1>Data Entry Portal</h1>
+            <p>Register land plots and record soil measurements with accuracy.</p>
+        </div>
+        <div style="display:flex; gap:.75rem; flex-wrap:wrap;">
+            <button class="btn btn-secondary" id="refreshBtn">
+                <ion-icon name="refresh-outline"></ion-icon> Refresh
+            </button>
+            <button class="btn btn-secondary" id="openAddSoilBtn" style="border-color:rgba(59,130,246,.3); color:var(--secondary);">
+                <ion-icon name="water-outline"></ion-icon> Add Soil Record
+            </button>
+            <button class="btn btn-primary" id="openAddLandBtn">
+                <ion-icon name="add-outline"></ion-icon> Register Land
+            </button>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-icon green"><ion-icon name="map-outline"></ion-icon></div>
+            <div class="stat-value" id="statLands">—</div>
+            <div class="stat-label">Land Plots</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon blue"><ion-icon name="layers-outline"></ion-icon></div>
+            <div class="stat-value" id="statSoil">—</div>
+            <div class="stat-label">Soil Records</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon amber"><ion-icon name="water-outline"></ion-icon></div>
+            <div class="stat-value" id="statAvgMoisture">—</div>
+            <div class="stat-label">Avg. Moisture %</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon red"><ion-icon name="alert-circle-outline"></ion-icon></div>
+            <div class="stat-value" id="statHighSalinity">—</div>
+            <div class="stat-label">High Salinity Alerts</div>
+        </div>
+    </div>
+
+    <!-- ── ADD / EDIT LAND FORM (glass-card, hidden by default) ── -->
+    <div class="glass-card" id="landFormCard" style="display:none; border-top: 4px solid var(--primary);">
+        <div class="glass-card-title">
+            <ion-icon name="map"></ion-icon>
+            <span id="landFormCardTitle">Register New Land Plot</span>
+        </div>
+        <form id="landForm">
+            <input type="hidden" id="landId">
+            <div class="form-grid">
+                <div class="form-group full">
+                    <label>Location / Name *</label>
+                    <input type="text" id="landLocation" placeholder="e.g. North Farm, Block A — Sector 4" required>
+                </div>
+                <div class="form-group">
+                    <label>Size (Acres) *</label>
+                    <input type="number" id="landSize" step="0.1" min="0.1" placeholder="e.g. 5.5" required>
+                </div>
+                <div class="form-group">
+                    <label>Land Type *</label>
+                    <select id="landType" required>
+                        <option value="" disabled selected>Select land type</option>
+                        <option>Agricultural</option>
+                        <option>Clay</option>
+                        <option>Sandy</option>
+                        <option>Loamy</option>
+                        <option>Silt</option>
+                        <option>Peat</option>
+                        <option>Chalky</option>
+                        <option>Irrigated</option>
+                        <option>Rainfed</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" id="cancelLandBtn">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="landSubmitBtn">
+                    <ion-icon name="save-outline"></ion-icon> Save Land Plot
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- ── ADD / EDIT SOIL FORM (glass-card, hidden by default) ── -->
+    <div class="glass-card" id="soilFormCard" style="display:none; border-top: 4px solid var(--secondary);">
+        <div class="glass-card-title">
+            <ion-icon name="layers" style="color:var(--secondary);"></ion-icon>
+            <span id="soilFormCardTitle">Add Soil Record</span>
+        </div>
+        <form id="soilForm">
+            <input type="hidden" id="soilId">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Land Plot *</label>
+                    <select id="soilLandId" required>
+                        <option value="" disabled selected>Select a land plot</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Soil Type *</label>
+                    <select id="soilType" required>
+                        <option value="" disabled selected>Select soil type</option>
+                        <option>Clay</option>
+                        <option>Sandy</option>
+                        <option>Loamy</option>
+                        <option>Silty</option>
+                        <option>Peaty</option>
+                        <option>Chalky</option>
+                        <option>Saline</option>
+                        <option>Laterite</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Record Date *</label>
+                    <input type="date" id="soilDate" required>
+                </div>
+                <div class="form-group full">
+                    <label>Moisture Level (%) — <strong id="moistureVal">50</strong>%</label>
+                    <div class="range-row">
+                        <input type="range" id="moisture" min="0" max="100" step="0.5" value="50">
+                        <span class="range-val" id="moistureDisplay">50%</span>
+                    </div>
+                </div>
+                <div class="form-group full">
+                    <label>Nutrient Level (N-P-K index) — <strong id="nutrientVal">50</strong></label>
+                    <div class="range-row">
+                        <input type="range" id="nutrient" min="0" max="100" step="0.5" value="50">
+                        <span class="range-val" id="nutrientDisplay">50</span>
+                    </div>
+                </div>
+                <div class="form-group full">
+                    <label>Salinity Level (dS/m) — <strong id="salinityVal">0.0</strong></label>
+                    <div class="range-row">
+                        <input type="range" id="salinity" min="0" max="20" step="0.1" value="0">
+                        <span class="range-val" id="salinityDisplay">0.0</span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" id="cancelSoilBtn">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="soilSubmitBtn"
+                        style="background: linear-gradient(135deg, var(--secondary), #1d4ed8); box-shadow: 0 4px 15px rgba(59,130,246,.3);">
+                    <ion-icon name="save-outline"></ion-icon> Save Soil Record
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- ── Tabs ── -->
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="lands">
+            <ion-icon name="map-outline"></ion-icon> Land Plots
+        </button>
+        <button class="tab-btn" data-tab="soil">
+            <ion-icon name="layers-outline"></ion-icon> Soil Records
+        </button>
+    </div>
+
+    <!-- Tab: Lands -->
+    <div class="tab-panel active" id="tab-lands">
+        <div class="table-card">
+            <div class="table-toolbar">
+                <div class="table-toolbar-title">
+                    <ion-icon name="map"></ion-icon> Registered Land Plots
+                </div>
+                <div class="search-box">
+                    <ion-icon name="search-outline"></ion-icon>
+                    <input type="text" id="landSearch" placeholder="Search location or type…">
+                </div>
+            </div>
+            <div id="landsTableBody">
+                <div class="spinner"><ion-icon name="sync-outline" class="spin"></ion-icon> Loading…</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab: Soil -->
+    <div class="tab-panel" id="tab-soil">
+        <div class="table-card">
+            <div class="table-toolbar">
+                <div class="table-toolbar-title">
+                    <ion-icon name="layers"></ion-icon> Soil Records
+                </div>
+                <div class="search-box">
+                    <ion-icon name="search-outline"></ion-icon>
+                    <input type="text" id="soilSearch" placeholder="Search soil type or land…">
+                </div>
+            </div>
+            <div id="soilTableBody">
+                <div class="spinner"><ion-icon name="sync-outline" class="spin"></ion-icon> Loading…</div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<!-- ── Confirm Delete ── -->
+<div class="modal-overlay" id="confirmModal">
+    <div class="confirm-box">
+        <div class="danger-icon"><ion-icon name="trash-outline"></ion-icon></div>
+        <h3 id="confirmTitle">Delete Record</h3>
+        <p id="confirmMsg">This action cannot be undone. Are you sure?</p>
+        <div class="confirm-actions">
+            <button class="btn btn-secondary" id="cancelConfirmBtn">Cancel</button>
+            <button class="btn btn-danger" id="confirmDeleteBtn">
+                <ion-icon name="trash-outline"></ion-icon> Delete
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div id="toast">
+    <ion-icon name="checkmark-circle" class="toast-icon success" id="toastIcon"></ion-icon>
+    <span class="toast-msg" id="toastMsg"></span>
+</div>
+
+<script>
+/* ── Auth & role setup ── */
+const API       = '/api';
+const token     = localStorage.getItem('jwtToken');
+const userRole  = localStorage.getItem('userRole');
+const userEmail = localStorage.getItem('userEmail');
+
+if (!token) window.location.href = '/login.html';
+
+const isDataEntry = userRole === 'ROLE_USER'  || userRole === 'ROLE_ADMIN';
+const isAdmin     = userRole === 'ROLE_ADMIN';
+const isOfficer   = userRole === 'ROLE_OFFICER';
+
+if (!isDataEntry) {
+    alert('Access denied. Data Entry or Admin role required.');
+    window.location.href = '/index.html';
+}
+
+/* ── Sidebar ── */
+document.getElementById('userEmailDisplay').textContent = userEmail || 'Unknown User';
+document.getElementById('userRoleDisplay').textContent  = (userRole || 'USER').replace('ROLE_', '');
+document.getElementById('userAvatar').textContent       = (userEmail || 'U').charAt(0).toUpperCase();
+
+if (isAdmin)             document.getElementById('navAdmin').style.display  = 'flex';
+if (isAdmin || isOfficer) {
+    document.getElementById('navReport').style.display = 'flex';
+    document.getElementById('navCrops').style.display  = 'flex';
+}
+
+document.getElementById('logoutBtn').addEventListener('click', e => {
+    e.preventDefault(); localStorage.clear();
+    window.location.href = '/login.html?logout=true';
+});
+
+/* ── Toast ── */
+function showToast(msg, type = 'success') {
+    const t = document.getElementById('toast');
+    const ico = document.getElementById('toastIcon');
+    document.getElementById('toastMsg').textContent = msg;
+    t.className = `show ${type}`;
+    ico.className = `toast-icon ${type}`;
+    ico.setAttribute('name', type === 'success' ? 'checkmark-circle' : 'close-circle');
+    setTimeout(() => { t.className = ''; }, 3500);
+}
+
+/* ── HTTP ── */
+const H = { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' };
+async function apiFetch(url, opts = {}) {
+    const res = await fetch(API + url, { headers: H, ...opts });
+    if (res.status === 401 || res.status === 403) {
+        localStorage.clear(); window.location.href = '/login.html'; return null;
+    }
+    return res;
+}
+
+/* ── State ── */
+let allLands = [], allSoil = [], pendingDeleteCb = null;
+
+/* ── Tabs ── */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+});
+
+/* ── Range sliders ── */
+function bindRange(id, displayId, suffix = '') {
+    const el = document.getElementById(id);
+    const disp = document.getElementById(displayId);
+    const val  = document.getElementById(id + 'Val');
+    el.addEventListener('input', () => {
+        const v = parseFloat(el.value).toFixed(suffix === '' ? 1 : 0);
+        disp.textContent = el.value + suffix;
+        if (val) val.textContent = el.value;
+    });
+}
+bindRange('moisture', 'moistureDisplay', '%');
+bindRange('nutrient',  'nutrientDisplay', '');
+bindRange('salinity',  'salinityDisplay', '');
+
+/* ── Land form open / close ── */
+document.getElementById('openAddLandBtn').addEventListener('click', () => {
+    document.getElementById('landForm').reset();
+    document.getElementById('landId').value = '';
+    document.getElementById('landFormCardTitle').textContent = 'Register New Land Plot';
+    document.getElementById('landSubmitBtn').innerHTML = '<ion-icon name="save-outline"></ion-icon> Save Land Plot';
+    document.getElementById('soilFormCard').style.display = 'none';
+    document.getElementById('landFormCard').style.display = 'block';
+    document.getElementById('landFormCard').scrollIntoView({ behavior: 'smooth' });
+});
+document.getElementById('cancelLandBtn').addEventListener('click', () => {
+    document.getElementById('landFormCard').style.display = 'none';
+});
+
+window.editLand = (id, location, size, type) => {
+    document.getElementById('landId').value       = id;
+    document.getElementById('landLocation').value = location;
+    document.getElementById('landSize').value     = size;
+    document.getElementById('landType').value     = type;
+    document.getElementById('landFormCardTitle').textContent = 'Edit Land Plot';
+    document.getElementById('landSubmitBtn').innerHTML = '<ion-icon name="save-outline"></ion-icon> Update Land Plot';
+    document.getElementById('soilFormCard').style.display = 'none';
+    document.getElementById('landFormCard').style.display = 'block';
+    document.getElementById('landFormCard').scrollIntoView({ behavior: 'smooth' });
+};
+
+/* ── Land form submit ── */
+document.getElementById('landForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const id   = document.getElementById('landId').value;
+    const body = JSON.stringify({
+        location: document.getElementById('landLocation').value,
+        size:     parseFloat(document.getElementById('landSize').value),
+        landType: document.getElementById('landType').value
+    });
+    const method = id ? 'PUT' : 'POST';
+    const url    = id ? `/lands/${id}` : '/lands';
+    try {
+        const res = await apiFetch(url, { method, body });
+        if (res && res.ok) {
+            document.getElementById('landFormCard').style.display = 'none';
+            showToast(id ? 'Land plot updated!' : 'Land plot registered!');
+            await loadAll();
+        } else { showToast('Failed to save land plot.', 'error'); }
+    } catch { showToast('Network error.', 'error'); }
+});
+
+/* ── Soil form open / close ── */
+function populateLandDropdown(selectedId = null) {
+    const sel = document.getElementById('soilLandId');
+    sel.innerHTML = '<option value="" disabled>Select a land plot</option>';
+    allLands.forEach(l => {
+        const opt = document.createElement('option');
+        opt.value = l.landId;
+        opt.textContent = `${l.location} (${l.landType} — ${l.size} ac)`;
+        if (selectedId && l.landId == selectedId) opt.selected = true;
+        sel.appendChild(opt);
+    });
+}
+
+function openSoilForm(landId = null, editing = false) {
+    if (!editing) {
+        document.getElementById('soilForm').reset();
+        document.getElementById('soilId').value = '';
+        document.getElementById('moisture').value = 50; document.getElementById('moistureDisplay').textContent = '50%';
+        document.getElementById('nutrient').value  = 50; document.getElementById('nutrientDisplay').textContent = '50';
+        document.getElementById('salinity').value  = 0;  document.getElementById('salinityDisplay').textContent = '0';
+        document.getElementById('soilDate').value = new Date().toISOString().split('T')[0];
+        document.getElementById('soilFormCardTitle').textContent = 'Add Soil Record';
+        document.getElementById('soilSubmitBtn').innerHTML = '<ion-icon name="save-outline"></ion-icon> Save Soil Record';
+    }
+    populateLandDropdown(landId);
+    document.getElementById('landFormCard').style.display = 'none';
+    document.getElementById('soilFormCard').style.display = 'block';
+    document.getElementById('soilFormCard').scrollIntoView({ behavior: 'smooth' });
+}
+
+document.getElementById('openAddSoilBtn').addEventListener('click', () => openSoilForm());
+document.getElementById('cancelSoilBtn').addEventListener('click', () => {
+    document.getElementById('soilFormCard').style.display = 'none';
+});
+
+window.addSoilForLand = (landId) => openSoilForm(landId);
+
+window.editSoil = (id, landId, soilType, moisture, nutrient, salinity, date) => {
+    document.getElementById('soilId').value   = id;
+    document.getElementById('soilType').value = soilType;
+    document.getElementById('soilDate').value = date || '';
+    document.getElementById('moisture').value = moisture; document.getElementById('moistureDisplay').textContent = moisture + '%';
+    document.getElementById('nutrient').value  = nutrient; document.getElementById('nutrientDisplay').textContent = nutrient;
+    document.getElementById('salinity').value  = salinity; document.getElementById('salinityDisplay').textContent = salinity;
+    document.getElementById('soilFormCardTitle').textContent = 'Edit Soil Record';
+    document.getElementById('soilSubmitBtn').innerHTML = '<ion-icon name="save-outline"></ion-icon> Update Soil Record';
+    openSoilForm(landId, true);
+    document.getElementById('soilLandId').value = landId;
+};
+
+/* ── Soil form submit ── */
+document.getElementById('soilForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const id = document.getElementById('soilId').value;
+    const body = JSON.stringify({
+        soilType:      document.getElementById('soilType').value,
+        moistureLevel: parseFloat(document.getElementById('moisture').value),
+        nutrientLevel: parseFloat(document.getElementById('nutrient').value),
+        salinityLevel: parseFloat(document.getElementById('salinity').value),
+        recordDate:    document.getElementById('soilDate').value,
+        land: { landId: parseInt(document.getElementById('soilLandId').value) }
+    });
+    const method = id ? 'PUT' : 'POST';
+    const url    = id ? `/soil-data/${id}` : '/soil-data';
+    try {
+        const res = await apiFetch(url, { method, body });
+        if (res && res.ok) {
+            document.getElementById('soilFormCard').style.display = 'none';
+            showToast(id ? 'Soil record updated!' : 'Soil record saved!');
+            await loadAll();
+        } else { showToast('Failed to save soil record.', 'error'); }
+    } catch { showToast('Network error.', 'error'); }
+});
+
+/* ── Delete confirm ── */
+function openConfirm(title, msg, cb) {
+    document.getElementById('confirmTitle').textContent = title;
+    document.getElementById('confirmMsg').textContent   = msg;
+    pendingDeleteCb = cb;
+    document.getElementById('confirmModal').classList.add('open');
+}
+document.getElementById('cancelConfirmBtn').addEventListener('click', () => {
+    document.getElementById('confirmModal').classList.remove('open');
+});
+document.getElementById('confirmModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('confirmModal'))
+        document.getElementById('confirmModal').classList.remove('open');
+});
+document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
+    if (pendingDeleteCb) await pendingDeleteCb();
+    document.getElementById('confirmModal').classList.remove('open');
+});
+
+window.deleteLand = (id, name) => openConfirm(
+    'Delete Land Plot',
+    `Delete "${name}"? All associated soil records will also be removed.`,
+    async () => {
+        const res = await apiFetch(`/lands/${id}`, { method: 'DELETE' });
+        if (res && res.ok) { showToast('Land plot deleted.'); await loadAll(); }
+        else showToast('Delete failed.', 'error');
+    }
+);
+
+window.deleteSoil = (id) => openConfirm(
+    'Delete Soil Record',
+    'Permanently remove this soil record?',
+    async () => {
+        const res = await apiFetch(`/soil-data/${id}`, { method: 'DELETE' });
+        if (res && res.ok) { showToast('Soil record deleted.'); await loadAll(); }
+        else showToast('Delete failed.', 'error');
+    }
+);
+
+/* ── Render helpers ── */
+function salinityBadge(v) {
+    if (v < 2) return 'badge-green';
+    if (v < 4) return 'badge-amber';
+    return 'badge-red';
+}
+function salinityLabel(v) {
+    if (v < 2) return 'Normal';
+    if (v < 4) return 'Moderate';
+    return 'High';
+}
+function progressColor(pct) {
+    if (pct < 30) return 'pf-red';
+    if (pct < 60) return 'pf-amber';
+    return 'pf-green';
+}
+
+/* ── Render lands table ── */
+function renderLands(filter = '') {
+    const body = document.getElementById('landsTableBody');
+    const data = allLands.filter(l =>
+        !filter ||
+        l.location.toLowerCase().includes(filter) ||
+        l.landType.toLowerCase().includes(filter)
+    );
+    if (!data.length) {
+        body.innerHTML = `<div class="empty-state">
+            <ion-icon name="map-outline"></ion-icon>
+            <h3>${filter ? 'No results found' : 'No land plots registered yet'}</h3>
+            <p>${filter ? 'Try a different search term.' : 'Click "Register Land" to add your first plot.'}</p>
+        </div>`; return;
+    }
+    const soilCountMap = {};
+    allSoil.forEach(s => { if (s.land) soilCountMap[s.land.landId] = (soilCountMap[s.land.landId]||0)+1; });
+
+    body.innerHTML = `
+    <table>
+      <thead><tr>
+        <th>#</th><th>Location</th><th>Land Type</th><th>Size (Acres)</th>
+        <th>Soil Records</th><th>Registered By</th><th style="text-align:right;">Actions</th>
+      </tr></thead>
+      <tbody>
+      ${data.map((l,i) => `
+        <tr>
+          <td style="color:var(--text-muted); font-size:.8rem;">${i+1}</td>
+          <td><strong>${l.location}</strong></td>
+          <td><span class="badge badge-green">${l.landType}</span></td>
+          <td>${l.size} ac</td>
+          <td><span class="badge ${soilCountMap[l.landId] ? 'badge-blue':'badge-amber'}">
+            ${soilCountMap[l.landId]||0} record${soilCountMap[l.landId]===1?'':'s'}
+          </span></td>
+          <td style="color:var(--text-muted); font-size:.85rem;">${l.user ? (l.user.email||l.user.fullName||'—') : '—'}</td>
+          <td>
+            <div class="td-actions" style="justify-content:flex-end;">
+              <button class="btn btn-secondary btn-sm" onclick="addSoilForLand(${l.landId})">
+                <ion-icon name="water-outline"></ion-icon> + Soil
+              </button>
+              <button class="btn btn-secondary btn-sm"
+                onclick="editLand(${l.landId},'${l.location.replace(/'/g,"\\'")}','${l.size}','${l.landType}')">
+                <ion-icon name="pencil-outline"></ion-icon>
+              </button>
+              <button class="btn btn-danger btn-sm" onclick="deleteLand(${l.landId},'${l.location.replace(/'/g,"\\'")}')">
+                <ion-icon name="trash-outline"></ion-icon>
+              </button>
+            </div>
+          </td>
+        </tr>`).join('')}
+      </tbody>
+    </table>`;
+}
+
+/* ── Render soil table ── */
+function renderSoil(filter = '') {
+    const body = document.getElementById('soilTableBody');
+    const data = allSoil.filter(s =>
+        !filter ||
+        (s.soilType||'').toLowerCase().includes(filter) ||
+        (s.land && s.land.location.toLowerCase().includes(filter))
+    );
+    if (!data.length) {
+        body.innerHTML = `<div class="empty-state">
+            <ion-icon name="layers-outline"></ion-icon>
+            <h3>${filter ? 'No results found' : 'No soil records yet'}</h3>
+            <p>${filter ? 'Try a different search term.' : 'Add soil data via the Land tab.'}</p>
+        </div>`; return;
+    }
+    body.innerHTML = `
+    <table>
+      <thead><tr>
+        <th>#</th><th>Land Plot</th><th>Soil Type</th><th>Moisture</th>
+        <th>Nutrients</th><th>Salinity</th><th>Date</th><th style="text-align:right;">Actions</th>
+      </tr></thead>
+      <tbody>
+      ${data.map((s,i) => {
+        const mPct = Math.min(s.moistureLevel, 100);
+        const nPct = Math.min(s.nutrientLevel, 100);
+        return `
+        <tr>
+          <td style="color:var(--text-muted); font-size:.8rem;">${i+1}</td>
+          <td><strong>${s.land ? s.land.location : '—'}</strong></td>
+          <td><span class="badge badge-blue">${s.soilType}</span></td>
+          <td><div class="progress-bar">
+            <div class="progress-track"><div class="progress-fill ${progressColor(mPct)}" style="width:${mPct}%"></div></div>
+            <span style="font-size:.8rem;">${s.moistureLevel}%</span>
+          </div></td>
+          <td><div class="progress-bar">
+            <div class="progress-track"><div class="progress-fill pf-blue" style="width:${nPct}%"></div></div>
+            <span style="font-size:.8rem;">${s.nutrientLevel}</span>
+          </div></td>
+          <td><span class="badge ${salinityBadge(s.salinityLevel)}">${s.salinityLevel} dS/m · ${salinityLabel(s.salinityLevel)}</span></td>
+          <td style="color:var(--text-muted); font-size:.85rem;">${s.recordDate||'—'}</td>
+          <td>
+            <div class="td-actions" style="justify-content:flex-end;">
+              <button class="btn btn-secondary btn-sm"
+                onclick="editSoil(${s.soilId},${s.land?s.land.landId:''},'${s.soilType}',${s.moistureLevel},${s.nutrientLevel},${s.salinityLevel},'${s.recordDate||''}')">
+                <ion-icon name="pencil-outline"></ion-icon>
+              </button>
+              <button class="btn btn-danger btn-sm" onclick="deleteSoil(${s.soilId})">
+                <ion-icon name="trash-outline"></ion-icon>
+              </button>
+            </div>
+          </td>
+        </tr>`;
+      }).join('')}
+      </tbody>
+    </table>`;
+}
+
+/* ── Stats ── */
+function updateStats() {
+    document.getElementById('statLands').textContent = allLands.length;
+    document.getElementById('statSoil').textContent  = allSoil.length;
+    if (allSoil.length) {
+        const avg = (allSoil.reduce((s,r) => s + r.moistureLevel, 0) / allSoil.length).toFixed(1);
+        document.getElementById('statAvgMoisture').textContent = avg + '%';
+        document.getElementById('statHighSalinity').textContent = allSoil.filter(r => r.salinityLevel >= 4).length;
+    } else {
+        document.getElementById('statAvgMoisture').textContent  = '—';
+        document.getElementById('statHighSalinity').textContent = '0';
+    }
+}
+
+/* ── Load all ── */
+async function loadAll() {
+    try {
+        const [lRes, sRes] = await Promise.all([apiFetch('/lands'), apiFetch('/soil-data')]);
+        allLands = (lRes && lRes.ok) ? await lRes.json() : [];
+        allSoil  = (sRes && sRes.ok) ? await sRes.json() : [];
+    } catch { allLands = []; allSoil = []; showToast('Failed to connect to server.', 'error'); }
+    updateStats();
+    renderLands(document.getElementById('landSearch').value.toLowerCase());
+    renderSoil(document.getElementById('soilSearch').value.toLowerCase());
+}
+
+/* ── Search ── */
+document.getElementById('landSearch').addEventListener('input', e => renderLands(e.target.value.toLowerCase()));
+document.getElementById('soilSearch').addEventListener('input', e => renderSoil(e.target.value.toLowerCase()));
+
+/* ── Refresh ── */
+document.getElementById('refreshBtn').addEventListener('click', loadAll);
+
+/* ── Boot ── */
+loadAll();
+</script>
+</body>
+</html>

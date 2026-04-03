@@ -17,6 +17,14 @@ public class CropService {
         return cropRepository.findAll();
     }
 
+    public List<Crop> getCropsBySalinityTolerance(String salinityTolerance) {
+        return cropRepository.findBySalinityTolerance(salinityTolerance);
+    }
+
+    public List<Crop> getCropsBySoilRequirement(String soilRequirement) {
+        return cropRepository.findBySoilRequirement(soilRequirement);
+    }
+
     public Crop getCropById(Long id) {
         return cropRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Crop not found with id " + id));

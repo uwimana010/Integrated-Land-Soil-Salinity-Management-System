@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - Land & Soil</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <!-- HTML2PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        :root {
+            --primary: #10b981; --primary-dark: #059669; --secondary: #3b82f6; --bg-body: #f1f5f9;
+            --glass-bg: rgba(255, 255, 255, 0.7); --glass-border: rgba(255, 255, 255, 0.5);
+            --text-main: #1e293b; --text-muted: #64748b; --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+
+        body {
+            background-color: var(--bg-body);
+            background-image: radial-gradient(at 0% 0%, hsla(152,100%,74%,0.15) 0px, transparent 50%), radial-gradient(at 100% 100%, hsla(217,100%,74%,0.15) 0px, transparent 50%);
+            background-attachment: fixed; color: var(--text-main); display: flex; min-height: 100vh;
+        }
+
+        /* Sidebar - Same as index.html */
+        .sidebar {
+            width: 260px; background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border-right: 1px solid var(--glass-border); display: flex; flex-direction: column; padding: 2rem 1.5rem; position: fixed; height: 100vh; z-index: 100;
+        }
+        .brand { display: flex; align-items: center; gap: 0.75rem; font-size: 1.5rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 3rem; }
+        .brand ion-icon { font-size: 2rem; color: var(--primary); }
+        .nav-links { display: flex; flex-direction: column; gap: 0.5rem; flex-grow: 1; }
+        .nav-link { display: flex; align-items: center; gap: 1rem; padding: 0.85rem 1.25rem; border-radius: 0.75rem; color: var(--text-muted); text-decoration: none; font-weight: 500; transition: var(--transition); }
+        .nav-link:hover, .nav-link.active { background: white; color: var(--primary-dark); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .nav-link ion-icon { font-size: 1.25rem; }
+
+        /* Main Content */
+        .main-content { margin-left: 260px; flex-grow: 1; padding: 2.5rem 3rem; max-width: 1400px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; }
+        .header h1 { font-size: 2.25rem; font-weight: 700; letter-spacing: -0.025em; }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white; border-radius: 1.5rem; padding: 2rem; box-shadow: var(--card-shadow);
+            border: 1px solid transparent; transition: var(--transition);
+            display: flex; align-items: center; gap: 1.5rem;
+        }
+        .stat-card:hover { transform: translateY(-5px); border-color: rgba(59,130,246,0.2); }
+
+        .stat-icon {
+            width: 60px; height: 60px; border-radius: 1rem; background: #eff6ff; color: var(--secondary);
+            display: flex; align-items: center; justify-content: center; font-size: 2rem;
+        }
+
+        .stat-info h3 { font-size: 2rem; font-weight: 700; color: var(--text-main); line-height: 1; margin-bottom: 0.5rem; }
+        .stat-info p { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; }
+
+        .btn { padding: 0.75rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; border: none; transition: var(--transition); display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
+        .btn-secondary { background: white; color: var(--text-main); border: 1px solid #e2e8f0; }
+        .btn:hover { transform: translateY(-2px); }
+
+        /* Print styles */
+        @media print {
+            .sidebar, .export-btns { display: none !important; }
+            .main-content { margin-left: 0; padding: 0; }
+            body { background: white; }
+            .stat-card { border: 1px solid #e2e8f0; box-shadow: none; break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="brand"><ion-icon name="leaf"></ion-icon> LandSoil</div>
+        <div class="nav-links">
+            <a href="/dashboard.html" class="nav-link"><ion-icon name="grid-outline"></ion-icon> Dashboard</a>
+            <a href="/crops.html" class="nav-link"><ion-icon name="leaf-outline"></ion-icon> Crop Database</a>
+            <a href="/report.html" class="nav-link active"><ion-icon name="pie-chart-outline"></ion-icon> Reports</a>
+            <a href="/admin.html" class="nav-link" id="navAdmin" style="display:none;"><ion-icon name="people-outline"></ion-icon> Admin Panel</a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="header">
+            <div>
+                <h1>System Overview</h1>
+                <p style="color: var(--text-muted);">High-level statistics and reports for the agricultural platform.</p>
+            </div>
+            <div class="export-btns" style="display:flex; gap:1rem;">
+                <button class="btn btn-secondary" onclick="exportCSV()"><ion-icon name="document-text-outline"></ion-icon> Export CSV</button>
+                <button class="btn btn-primary" onclick="exportPDF()"><ion-icon name="download-outline"></ion-icon> Download PDF</button>
+            </div>
+        </div>
+
+        <div id="reportContainer">
+            <h2 style="display:none; margin-bottom:1.5rem;" id="pdfTitle">Land & Soil Management - System Report</h2>
+            <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon" style="color: #10b981; background: #d1fae5;"><ion-icon name="map"></ion-icon></div>
+                <div class="stat-info"><h3 id="statLands">0</h3><p>Total Registered Lands</p></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="color: #f59e0b; background: #fef3c7;"><ion-icon name="flask"></ion-icon></div>
+                <div class="stat-info"><h3 id="statSoil">0</h3><p>Soil Data Records</p></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="color: #8b5cf6; background: #ede9fe;"><ion-icon name="document-text"></ion-icon></div>
+                <div class="stat-info"><h3 id="statRecs">0</h3><p>Recommendations Generated</p></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="color: #3b82f6; background: #dbeafe;"><ion-icon name="people"></ion-icon></div>
+                <div class="stat-info"><h3 id="statUsers">0</h3><p>Active Users</p></div>
+            </div>
+        </div>
+        </div>
+    </main>
+
+    <script>
+        const API_URL = '/api/reports/summary';
+        const token = localStorage.getItem('jwtToken');
+        const role = localStorage.getItem('userRole');
+        
+        if (!token || (role !== 'ROLE_ADMIN' && role !== 'ROLE_OFFICER')) {
+            window.location.href = '/index.html';
+        }
+
+        if (role === 'ROLE_ADMIN') {
+            document.getElementById('navAdmin').style.display = 'flex';
+        }
+
+        const headers = { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' };
+
+        let currentStats = null;
+        async function fetchSummary() {
+            try {
+                const res = await fetch(API_URL, { headers });
+                if (res.ok) {
+                    currentStats = await res.json();
+                    document.getElementById('statLands').innerText = currentStats.totalLands || 0;
+                    document.getElementById('statSoil').innerText = currentStats.totalSoilRecords || 0;
+                    document.getElementById('statRecs').innerText = currentStats.totalRecommendations || 0;
+                    document.getElementById('statUsers').innerText = currentStats.totalUsers || 0;
+                } else {
+                    console.error('Failed to load stats.');
+                }
+            } catch (err) { console.error('Request failed.'); }
+        }
+
+        window.exportCSV = () => {
+            if (!currentStats) return alert("Report data not loaded yet.");
+            const csvContent = "data:text/csv;charset=utf-8," 
+                + "Metric,Count\n"
+                + `Total Registered Lands,${currentStats.totalLands || 0}\n`
+                + `Soil Data Records,${currentStats.totalSoilRecords || 0}\n`
+                + `Recommendations Generated,${currentStats.totalRecommendations || 0}\n`
+                + `Active Users,${currentStats.totalUsers || 0}\n`;
+            
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "land_soil_system_report.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+
+        window.exportPDF = () => {
+            const element = document.getElementById('reportContainer');
+            document.getElementById('pdfTitle').style.display = 'block'; // Show title for PDF
+            
+            const opt = {
+                margin:       1,
+                filename:     'land_soil_system_report.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' }
+            };
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                document.getElementById('pdfTitle').style.display = 'none'; // Hide title after PDF
+            });
+        };
+
+        fetchSummary();
+    </script>
+</body>
+</html>
