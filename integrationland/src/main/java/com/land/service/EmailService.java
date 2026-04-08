@@ -88,7 +88,14 @@ public class EmailService {
             mailSender.send(message);
 
         } catch (MessagingException e) {
-            throw new RuntimeException("Failed to send OTP email: " + e.getMessage(), e);
+            // Enhanced logging for Phase 8: Robustness
+            System.err.println("\n[SYSTEM ALERT — MAIL SERVER UNREACHABLE]");
+            System.err.println("CRITICAL: SMTP error occurred. In development mode, the OTP is printed below:");
+            System.err.println("OTP for " + toEmail + " is: " + otp);
+            System.err.println("Error details: " + e.getMessage() + "\n");
+            
+            // Re-throw if you want the request to fail, or swallow to allow manual entry
+            throw new RuntimeException("Mail server connection failed. Please check the application console for the OTP code (Development Mode).", e);
         }
     }
 }

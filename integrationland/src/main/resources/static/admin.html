@@ -160,15 +160,113 @@
     </aside>
 
     <main class="main-content">
-        <div class="header">
+        <div class="header" style="display: flex; align-items: center; justify-content: space-between;">
             <div>
                 <h1>Admin Station</h1>
-                <p style="color: var(--text-muted);">Comprehensive System Management & Security Oversight.</p>
+                <p style="color: var(--text-muted);">Comprehensive System Management &amp; Security Oversight.</p>
             </div>
-            <div>
-                <button id="addUserBtn" class="btn btn-primary"><ion-icon name="add"></ion-icon> Register Account</button>
+
+            <!-- CENTER: hero copy.gif showcase for Admin -->
+            <div style="
+                flex: 1;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 0 2rem;
+            ">
+                <div style="
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                    gap: 1.25rem;
+                    background: rgba(255,255,255,0.7);
+                    backdrop-filter: blur(16px);
+                    -webkit-backdrop-filter: blur(16px);
+                    border: 1px solid rgba(255,255,255,0.7);
+                    border-radius: 1.5rem;
+                    padding: 0.75rem 1.75rem 0.75rem 0.75rem;
+                    box-shadow: 0 12px 32px rgba(16,185,129,0.10), 0 2px 8px rgba(0,0,0,0.05);
+                    animation: adminFloatCard 3s ease-in-out infinite;
+                ">
+                    <!-- Spinning conic ring around GIF -->
+                    <div style="position: relative; width: 90px; height: 90px; flex-shrink: 0;">
+                        <div style="
+                            position: absolute; inset: -4px; border-radius: 50%;
+                            background: conic-gradient(from 0deg, #10b981, #3b82f6, #a855f7, #10b981);
+                            animation: adminSpin 5s linear infinite; z-index: 0;
+                        "></div>
+                        <div style="position: absolute; inset: 3px; border-radius: 50%; background: white; z-index: 1;"></div>
+                        <img src="/assets/hero copy.gif" alt="Hero GIF"
+                             style="position: absolute; inset: 5px;
+                                    width: calc(100% - 10px); height: calc(100% - 10px);
+                                    border-radius: 50%; object-fit: cover; z-index: 2;">
+                    </div>
+                    <!-- Label with Emoji -->
+                    <div>
+                        <div style="font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--primary); margin-bottom: 0.2rem;">🌿 Admin Control</div>
+                        <div style="font-size: 1rem; font-weight: 700; color: var(--text-main); line-height: 1.2;">System Security<br>&amp; Insights</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right side: Register + Hero GIF + Sign Out -->
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <button id="addUserBtn" class="btn btn-primary">
+                    <ion-icon name="add"></ion-icon> Register Account
+                </button>
+
+                <!-- Hero GIF + Sign Out pill -->
+                <div style="
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
+                    background: rgba(255,255,255,0.75);
+                    backdrop-filter: blur(14px);
+                    -webkit-backdrop-filter: blur(14px);
+                    border: 1px solid rgba(255,255,255,0.6);
+                    border-radius: 60px;
+                    padding: 0.45rem 1.2rem 0.45rem 0.45rem;
+                    box-shadow: 0 8px 24px rgba(16,185,129,0.12), 0 2px 8px rgba(0,0,0,0.06);
+                ">
+                    <!-- Spinning ring around GIF -->
+                    <div style="position: relative; width: 54px; height: 54px; flex-shrink: 0;">
+                        <div style="
+                            position: absolute; inset: -3px; border-radius: 50%;
+                            background: conic-gradient(from 0deg, #10b981, #3b82f6, #10b981);
+                            animation: adminSpin 4s linear infinite; z-index: 0;
+                        "></div>
+                        <div style="
+                            position: absolute; inset: 2px; border-radius: 50%;
+                            background: white; z-index: 1;
+                        "></div>
+                        <img src="/assets/hero copy.gif" alt="Hero"
+                             style="position: absolute; inset: 4px;
+                                    width: calc(100% - 8px); height: calc(100% - 8px);
+                                    border-radius: 50%; object-fit: cover; z-index: 2;">
+                    </div>
+
+                    <button id="adminLogoutBtn" class="btn" style="
+                        background: linear-gradient(135deg, #fee2e2, #fecaca);
+                        color: #dc2626; border: 1px solid #fca5a5;
+                        border-radius: 50px; padding: 0.55rem 1.2rem;
+                        font-size: 0.9rem; box-shadow: 0 2px 8px rgba(239,68,68,0.15);
+                        transition: all 0.3s ease;
+                    "
+                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(239,68,68,0.25)';"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(239,68,68,0.15)';">
+                        <ion-icon name="log-out-outline"></ion-icon> Sign Out
+                    </button>
+                </div>
             </div>
         </div>
+
+        <style>
+            @keyframes adminSpin { to { transform: rotate(360deg); } }
+            @keyframes adminFloatCard {
+                0%, 100% { transform: translateY(0px); }
+                50%       { transform: translateY(-6px); }
+            }
+        </style>
 
         <!-- Monitoring Widget -->
         <h3 style="margin-bottom:1rem;font-size:1.1rem;color:var(--text-muted);">Real-Time Usage Monitoring</h3>
@@ -498,6 +596,12 @@
                 if (res.ok) { fetchUsers(); fetchMonitor(); } else { alert('Error revoking identity'); }
             } catch (err) { alert('Request failed'); }
         };
+
+        // Admin Sign Out
+        document.getElementById('adminLogoutBtn').addEventListener('click', () => {
+            localStorage.clear();
+            window.location.href = '/login.html?logout=true';
+        });
 
         fetchUsers(); fetchMonitor();
     </script>

@@ -34,4 +34,30 @@ public class ReportController {
         summary.put("totalUsers", userRepository.count());
         return ResponseEntity.ok(summary);
     }
+
+    @GetMapping("/detailed")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_OFFICER')")
+    public ResponseEntity<Map<String, Object>> getDetailedReport() {
+        Map<String, Object> data = new HashMap<>();
+        
+        // Use generic Object maps for categorization
+        data.put("landTypeDistribution", landRepository.findAll().stream()
+                .collect(java.util.stream.Collectors.groupingBy(com.land.model.Land::getLandType, java.util.stream.Collectors.counting())));
+        
+        data.put("soilTypeDistribution", soilDataRepository.findAll().stream()
+                .collect(java.util.stream.Collectors.groupingBy(com.land.model.SoilData::getSoilType, java.util.stream.Collectors.counting())));
+                
+        // Average moisture by soil type
+        data.put("avgMoisture", soilDataRepository.findAll().stream()
+                .collect(java.util.stream.Collectors.groupingBy(com.land.model.SoilData::getSoilType, 
+                        java.util.stream.Collectors.averagingDouble(com.land.model.SoilData::getMoistureLevel))));
+
+        // Recent records
+        data.put("recentRecords", soilDataRepository.findAll().stream()
+                .sorted((a, b) -> b.getSoilId().compareTo(a.getSoilId()))
+                .limit(10)
+                .collect(java.util.stream.Collectors.toList()));
+                
+        return ResponseEntity.ok(data);
+    }
 }

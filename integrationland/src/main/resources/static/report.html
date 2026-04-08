@@ -11,6 +11,8 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <!-- HTML2PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
             --primary: #10b981; --primary-dark: #059669; --secondary: #3b82f6; --bg-body: #f1f5f9;
@@ -69,12 +71,29 @@
         .btn-secondary { background: white; color: var(--text-main); border: 1px solid #e2e8f0; }
         .btn:hover { transform: translateY(-2px); }
 
+        /* Analytics Section */
+        .analytics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem; margin-bottom: 3rem; }
+        .chart-card { background: white; border-radius: 1.5rem; padding: 2rem; box-shadow: var(--card-shadow); border: 1px solid transparent; }
+        .chart-card h4 { margin-bottom: 1.5rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 0.5rem; }
+        .chart-container { position: relative; height: 300px; }
+
+        /* Table Section */
+        .table-card { background: white; border-radius: 1.5rem; padding: 2rem; box-shadow: var(--card-shadow); border: 1px solid transparent; overflow: hidden; }
+        .table-card h4 { margin-bottom: 1.5rem; font-weight: 700; color: var(--text-main); }
+        .data-table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { padding: 1rem; background: #f8fafc; color: var(--text-muted); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #f1f5f9; }
+        td { padding: 1.25rem 1rem; border-bottom: 1px solid #f1f5f9; color: var(--text-main); font-size: 0.95rem; }
+        .badge { padding: 0.4rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; }
+        .badge-info { background: #eff6ff; color: #3b82f6; }
+        .badge-success { background: #d1fae5; color: #10b981; }
+
         /* Print styles */
         @media print {
-            .sidebar, .export-btns { display: none !important; }
-            .main-content { margin-left: 0; padding: 0; }
+            .sidebar, .export-btns, .nav-links { display: none !important; }
+            .main-content { margin: 0; padding: 2rem; }
             body { background: white; }
-            .stat-card { border: 1px solid #e2e8f0; box-shadow: none; break-inside: avoid; }
+            .stat-card, .chart-card, .table-card { border: 1px solid #e2e8f0; box-shadow: none; break-inside: avoid; }
         }
     </style>
 </head>
@@ -122,6 +141,41 @@
                 <div class="stat-info"><h3 id="statUsers">0</h3><p>Active Users</p></div>
             </div>
         </div>
+
+        <div class="analytics-grid">
+            <div class="chart-card">
+                <h4><ion-icon name="pie-chart-outline"></ion-icon> Land Distribution</h4>
+                <div class="chart-container">
+                    <canvas id="landChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h4><ion-icon name="stats-chart-outline"></ion-icon> Soil Moisture Avg by Type</h4>
+                <div class="chart-container">
+                    <canvas id="moistureChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-card">
+            <h4>Recent Soil Analysis Activity</h4>
+            <div class="data-table-container">
+                <table id="recordsTable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Soil Type</th>
+                            <th>Nutrient Level</th>
+                            <th>Salinity</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recordsBody">
+                        <!-- Loaded via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
         </div>
     </main>
 
@@ -141,19 +195,85 @@
         const headers = { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' };
 
         let currentStats = null;
-        async function fetchSummary() {
+        let detailedData = null;
+
+        async function fetchAllData() {
             try {
-                const res = await fetch(API_URL, { headers });
-                if (res.ok) {
-                    currentStats = await res.json();
+                // Fetch Summary
+                const summaryRes = await fetch(API_URL, { headers });
+                if (summaryRes.ok) {
+                    currentStats = await summaryRes.json();
                     document.getElementById('statLands').innerText = currentStats.totalLands || 0;
                     document.getElementById('statSoil').innerText = currentStats.totalSoilRecords || 0;
                     document.getElementById('statRecs').innerText = currentStats.totalRecommendations || 0;
                     document.getElementById('statUsers').innerText = currentStats.totalUsers || 0;
-                } else {
-                    console.error('Failed to load stats.');
                 }
-            } catch (err) { console.error('Request failed.'); }
+
+                // Fetch Detailed
+                const detailedRes = await fetch('/api/reports/detailed', { headers });
+                if (detailedRes.ok) {
+                    detailedData = await detailedRes.json();
+                    renderCharts(detailedData);
+                    renderTable(detailedData.recentRecords);
+                }
+            } catch (err) { console.error('Request failed.', err); }
+        }
+
+        function renderCharts(data) {
+            // Land Dist Chart
+            const landCtx = document.getElementById('landChart').getContext('2d');
+            const landLabels = Object.keys(data.landTypeDistribution);
+            const landValues = Object.values(data.landTypeDistribution);
+            
+            new Chart(landCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: landLabels,
+                    datasets: [{
+                        data: landValues,
+                        backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#8b5cf6', '#ef4444'],
+                        borderWidth: 0,
+                    }]
+                },
+                options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+            });
+
+            // Moisture Chart
+            const moistCtx = document.getElementById('moistureChart').getContext('2d');
+            const moistLabels = Object.keys(data.avgMoisture);
+            const moistValues = Object.values(data.avgMoisture).map(v => v.toFixed(2));
+            
+            new Chart(moistCtx, {
+                type: 'bar',
+                data: {
+                    labels: moistLabels,
+                    datasets: [{
+                        label: 'Average Moisture (%)',
+                        data: moistValues,
+                        backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                        borderColor: '#3b82f6',
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: { maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+            });
+        }
+
+        function renderTable(records) {
+            const body = document.getElementById('recordsBody');
+            body.innerHTML = '';
+            records.forEach(r => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${r.recordDate || 'N/A'}</td>
+                    <td><span class="badge badge-info">${r.soilType}</span></td>
+                    <td>${r.nutrientLevel}</td>
+                    <td>${r.salinityLevel}</td>
+                    <td><span class="badge badge-success">Analyzed</span></td>
+                `;
+                body.appendChild(row);
+            });
         }
 
         window.exportCSV = () => {
@@ -179,7 +299,7 @@
             document.getElementById('pdfTitle').style.display = 'block'; // Show title for PDF
             
             const opt = {
-                margin:       1,
+                margin:       [0.5, 0.5],
                 filename:     'land_soil_system_report.pdf',
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2 },
@@ -191,7 +311,7 @@
             });
         };
 
-        fetchSummary();
+        fetchAllData();
     </script>
 </body>
 </html>
