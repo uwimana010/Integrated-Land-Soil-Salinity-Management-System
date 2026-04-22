@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,98 +12,446 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <style>
         :root {
-            --primary: #10b981; --primary-dark: #059669; --secondary: #3b82f6; --bg-body: #f8fafc;
-            --glass-bg: rgba(255, 255, 255, 0.85); --glass-border: rgba(255, 255, 255, 0.5);
-            --text-main: #1e293b; --text-muted: #64748b; --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --secondary: #3b82f6;
+            --bg-body: #f8fafc;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
 
         body {
             background-color: var(--bg-body);
-            background-image: radial-gradient(at 0% 0%, hsla(152,100%,74%,0.15) 0px, transparent 50%), radial-gradient(at 100% 100%, hsla(217,100%,74%,0.15) 0px, transparent 50%);
-            background-attachment: fixed; color: var(--text-main); display: flex; min-height: 100vh;
+            background-image: radial-gradient(at 0% 0%, hsla(152, 100%, 74%, 0.15) 0px, transparent 50%), radial-gradient(at 100% 100%, hsla(217, 100%, 74%, 0.15) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
         }
 
         /* Sidebar - Same as index.html */
         .sidebar {
-            width: 260px; background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border-right: 1px solid var(--glass-border); display: flex; flex-direction: column; padding: 2rem 1.5rem; position: fixed; height: 100vh; z-index: 100;
-            box-shadow: 2px 0 15px rgba(0,0,0,0.02);
+            width: 260px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-right: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem 1.5rem;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+            box-shadow: 2px 0 15px rgba(0, 0, 0, 0.02);
         }
-        .brand { display: flex; align-items: center; gap: 0.75rem; font-size: 1.5rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 3rem; }
-        .brand ion-icon { font-size: 2rem; color: var(--primary); }
-        .nav-links { display: flex; flex-direction: column; gap: 0.5rem; flex-grow: 1; }
-        .nav-link { display: flex; align-items: center; gap: 1rem; padding: 0.85rem 1.25rem; border-radius: 0.75rem; color: var(--text-muted); text-decoration: none; font-weight: 500; transition: var(--transition); }
-        .nav-link:hover, .nav-link.active { background: white; color: var(--primary-dark); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-        .nav-link ion-icon { font-size: 1.25rem; }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 3rem;
+        }
+
+        .brand ion-icon {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            flex-grow: 1;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.85rem 1.25rem;
+            border-radius: 0.75rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: white;
+            color: var(--primary-dark);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-link ion-icon {
+            font-size: 1.25rem;
+        }
 
         /* Main Content */
-        .main-content { margin-left: 260px; flex-grow: 1; padding: 2.5rem 3rem; max-width: 1400px; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; }
-        .header h1 { font-size: 2.25rem; font-weight: 700; letter-spacing: -0.025em; }
+        .main-content {
+            margin-left: 260px;
+            flex-grow: 1;
+            padding: 2.5rem 3rem;
+            max-width: 1400px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .header h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
 
         /* Usage Dashboard Cards */
-        .usage-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem; }
-        .usage-card { background: white; padding: 1.5rem; border-radius: 1rem; box-shadow: var(--card-shadow); border-left: 4px solid var(--primary); display: flex; align-items: center; justify-content: space-between; }
-        .usage-value { font-size: 1.75rem; font-weight: 700; line-height: 1; margin-bottom: 0.25rem; }
-        .usage-label { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
-        .usage-icon { font-size: 2rem; color: #cbd5e1; }
+        .usage-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .usage-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: var(--card-shadow);
+            border-left: 4px solid var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .usage-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 0.25rem;
+        }
+
+        .usage-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .usage-icon {
+            font-size: 2rem;
+            color: #cbd5e1;
+        }
 
         /* Tabs */
-        .tab-nav { display: flex; gap: 1rem; margin-bottom: 1.5rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem; }
-        .tab-btn { background: none; border: none; padding: 0.5rem 1rem; font-size: 1rem; font-weight: 600; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; transition: var(--transition); display:flex; gap:0.5rem; align-items:center; }
-        .tab-btn:hover { color: var(--primary-dark); }
-        .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
-        
-        .tab-panel { display: none; animation: fadeIn 0.4s ease-out; }
-        .tab-panel.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .tab-nav {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: var(--transition);
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .tab-btn:hover {
+            color: var(--primary-dark);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-panel {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
         /* Glass Card */
-        .glass-card { background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: 1.25rem; padding: 2rem; box-shadow: var(--card-shadow); }
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 1.25rem;
+            padding: 2rem;
+            box-shadow: var(--card-shadow);
+        }
 
         /* Table */
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 1rem; text-align: left; border-bottom: 1px solid #e2e8f0; }
-        th { font-weight: 600; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
-        td { color: var(--text-main); font-weight: 500;}
-        tr:last-child td { border-bottom: none; }
-        
-        .role-badge { padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.75rem; font-weight: 700; display: inline-block; }
-        .role-admin { background: #fee2e2; color: #dc2626; }
-        .role-officer { background: #dbeafe; color: #2563eb; }
-        .role-user { background: #d1fae5; color: #059669; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .role-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .role-admin {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .role-officer {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .role-user {
+            background: #d1fae5;
+            color: #059669;
+        }
 
         /* Buttons */
-        .btn-action { padding: 0.4rem 0.8rem; border-radius: 0.5rem; border: none; cursor: pointer; font-size: 0.85rem; font-weight: 600; margin-right: 0.5rem; transition: var(--transition); }
-        .btn-edit    { background: #e0e7ff; color: #4338ca; }
-        .btn-edit:hover    { background: #6366f1; color: white; }
-        .btn-delete  { background: #fee2e2; color: #dc2626; }
-        .btn-delete:hover  { background: #f87171; color: white; }
-        .btn-approve { background: #d1fae5; color: #065f46; }
-        .btn-approve:hover { background: #10b981; color: white; }
-        .btn-suspend { background: #fef3c7; color: #92400e; }
-        .btn-suspend:hover { background: #f59e0b; color: white; }
-        .btn { padding: 0.75rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; border: none; transition: var(--transition); display: inline-flex; align-items: center; gap: 0.5rem; }
-        .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
-        .btn-primary:hover { transform: translateY(-2px); }
-        .btn-secondary { background: white; color: var(--text-main); border: 1px solid #e2e8f0; }
+        .btn-action {
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .btn-edit {
+            background: #e0e7ff;
+            color: #4338ca;
+        }
+
+        .btn-edit:hover {
+            background: #6366f1;
+            color: white;
+        }
+
+        .btn-delete {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .btn-delete:hover {
+            background: #f87171;
+            color: white;
+        }
+
+        .btn-approve {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .btn-approve:hover {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-suspend {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .btn-suspend:hover {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--text-main);
+            border: 1px solid #e2e8f0;
+        }
 
         /* Approval status badges */
-        .status-approved { display:inline-flex; align-items:center; gap:0.35rem; padding:0.3rem 0.75rem; border-radius:50px; background:#d1fae5; color:#065f46; font-size:0.8rem; font-weight:700; }
-        .status-pending  { display:inline-flex; align-items:center; gap:0.35rem; padding:0.3rem 0.75rem; border-radius:50px; background:#fef3c7; color:#92400e; font-size:0.8rem; font-weight:700; }
-        .status-dot { width:7px; height:7px; border-radius:50%; display:inline-block; }
-        .dot-green  { background:#10b981; }
-        .dot-amber  { background:#f59e0b; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+        .status-approved {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.3rem 0.75rem;
+            border-radius: 50px;
+            background: #d1fae5;
+            color: #065f46;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .status-pending {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.3rem 0.75rem;
+            border-radius: 50px;
+            background: #fef3c7;
+            color: #92400e;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .dot-green {
+            background: #10b981;
+        }
+
+        .dot-amber {
+            background: #f59e0b;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: .4
+            }
+        }
 
         /* Forms & Settings */
-        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1rem; }
-        .form-group label { display: block; font-size: 0.875rem; font-weight:500; margin-bottom: 0.4rem; color:var(--text-muted);}
-        .form-group input, .form-group select { width: 100%; padding: 0.75rem 1rem; border: 1px solid #cbd5e1; border-radius: 0.5rem; outline:none; transition: var(--transition); }
-        .form-group input:focus { border-color: var(--primary); }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.4rem;
+            color: var(--text-muted);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.5rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+            background: white;
+        }
+
+        .input-wrap { position: relative; }
+        .input-wrap ion-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 1.2rem; }
+        
+        .form-group input, .form-group select {
+            padding-left: 2.75rem;
+            background: #f9fafb;
+        }
 
         /* Inline role selector */
         .role-select {
@@ -118,7 +467,12 @@
             color: var(--text-main);
             transition: border-color 0.2s, box-shadow 0.2s;
         }
-        .role-select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(16,185,129,.1); }
+
+        .role-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, .1);
+        }
+
         .btn-save-role {
             padding: 0.3rem 0.6rem;
             border-radius: 0.5rem;
@@ -131,31 +485,88 @@
             transition: background 0.2s;
             margin-left: 0.35rem;
         }
-        .btn-save-role:hover { background: #10b981; color: white; }
 
-        .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 0; border-bottom: 1px dashed #e2e8f0; }
-        .setting-text h4 { font-size: 1.1rem; margin-bottom: 0.2rem; }
-        .setting-text p { font-size: 0.85rem; color: var(--text-muted); }
-        
+        .btn-save-role:hover {
+            background: #10b981;
+            color: white;
+        }
+
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 0;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+
+        .setting-text h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .setting-text p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
         /* Toggle Switch */
-        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--primary); }
-        input:checked + .slider:before { transform: translateX(20px); }
-        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cbd5e1;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: var(--primary);
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(20px);
+        }
     </style>
 </head>
+
 <body>
 
     <aside class="sidebar">
-        <div class="brand"><ion-icon name="leaf"></ion-icon> LandSoil</div>
+        <div class="brand"><ion-icon name="leaf"></ion-icon> ILSS Management</div>
         <div class="nav-links">
             <a href="/dashboard.html" class="nav-link"><ion-icon name="grid-outline"></ion-icon> Dashboard</a>
             <a href="/crops.html" class="nav-link"><ion-icon name="leaf-outline"></ion-icon> Crop Database</a>
             <a href="/report.html" class="nav-link"><ion-icon name="pie-chart-outline"></ion-icon> Reports</a>
-            <a href="/admin.html" class="nav-link active"><ion-icon name="shield-checkmark"></ion-icon> Admin Station</a>
+            <a href="/admin.html" class="nav-link active"><ion-icon name="shield-checkmark"></ion-icon> Admin
+                Station</a>
         </div>
     </aside>
 
@@ -195,22 +606,31 @@
                             background: conic-gradient(from 0deg, #10b981, #3b82f6, #a855f7, #10b981);
                             animation: adminSpin 5s linear infinite; z-index: 0;
                         "></div>
-                        <div style="position: absolute; inset: 3px; border-radius: 50%; background: white; z-index: 1;"></div>
-                        <img src="/assets/hero copy.gif" alt="Hero GIF"
-                             style="position: absolute; inset: 5px;
+                        <div style="position: absolute; inset: 3px; border-radius: 50%; background: white; z-index: 1;">
+                        </div>
+                        <img src="/assets/hero copy.gif" alt="Hero GIF" style="position: absolute; inset: 5px;
                                     width: calc(100% - 10px); height: calc(100% - 10px);
                                     border-radius: 50%; object-fit: cover; z-index: 2;">
                     </div>
                     <!-- Label with Emoji -->
                     <div>
-                        <div style="font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--primary); margin-bottom: 0.2rem;">🌿 Admin Control</div>
-                        <div style="font-size: 1rem; font-weight: 700; color: var(--text-main); line-height: 1.2;">System Security<br>&amp; Insights</div>
+                        <div
+                            style="font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--primary); margin-bottom: 0.2rem;">
+                            🌿 Admin Control</div>
+                        <div style="font-size: 1rem; font-weight: 700; color: var(--text-main); line-height: 1.2;">
+                            System Security<br>&amp; Insights</div>
                     </div>
                 </div>
             </div>
 
             <!-- Right side: Register + Hero GIF + Sign Out -->
-            <div style="display: flex; align-items: center; gap: 1rem;">
+            <div style="display: flex; align-items: center; gap: 1.5rem;">
+                <!-- Notifications Bell -->
+                <div style="position: relative; cursor: pointer;" id="notifTrigger">
+                    <ion-icon name="notifications-outline" style="font-size: 1.85rem; color: var(--text-muted);"></ion-icon>
+                    <span id="notifBadge" style="display:none; position: absolute; top: -2px; right: -2px; background: #ef4444; color: white; font-size: 0.7rem; font-weight: 800; padding: 2px 6px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">0</span>
+                </div>
+
                 <button id="addUserBtn" class="btn btn-primary">
                     <ion-icon name="add"></ion-icon> Register Account
                 </button>
@@ -239,8 +659,7 @@
                             position: absolute; inset: 2px; border-radius: 50%;
                             background: white; z-index: 1;
                         "></div>
-                        <img src="/assets/hero copy.gif" alt="Hero"
-                             style="position: absolute; inset: 4px;
+                        <img src="/assets/hero copy.gif" alt="Hero" style="position: absolute; inset: 4px;
                                     width: calc(100% - 8px); height: calc(100% - 8px);
                                     border-radius: 50%; object-fit: cover; z-index: 2;">
                     </div>
@@ -251,75 +670,148 @@
                         border-radius: 50px; padding: 0.55rem 1.2rem;
                         font-size: 0.9rem; box-shadow: 0 2px 8px rgba(239,68,68,0.15);
                         transition: all 0.3s ease;
-                    "
-                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(239,68,68,0.25)';"
-                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(239,68,68,0.15)';">
+                    " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(239,68,68,0.25)';"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(239,68,68,0.15)';">
                         <ion-icon name="log-out-outline"></ion-icon> Sign Out
                     </button>
                 </div>
             </div>
         </div>
 
+        </style>
+
+        <!-- Notifications Panel (Dropdown) -->
+        <div id="notifPanel" style="display:none; position:fixed; top:100px; right:3rem; width:380px; max-height:550px; background:white; border-radius:1.25rem; box-shadow:0 25px 50px -12px rgba(0,0,0,0.25); border:1px solid #e2e8f0; z-index:1000; overflow:hidden; animation:adminNotifSlide 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+            <div style="padding:1.25rem; border-bottom:1px solid #f1f5f9; display:flex; justify-content:space-between; align-items:center; background:#f8fafc;">
+                <h4 style="margin:0; font-size:1.1rem; display:flex; align-items:center; gap:0.5rem;"><ion-icon name="notifications" style="color:var(--primary);"></ion-icon> Pending Approvals</h4>
+                <button onclick="document.getElementById('notifPanel').style.display='none'" style="background:none; border:none; cursor:pointer; color:var(--text-muted); font-size:1.5rem; display:flex;"><ion-icon name="close-outline"></ion-icon></button>
+            </div>
+            <div id="notifList" style="overflow-y:auto; max-height:450px; padding:0.75rem;">
+                <div style="padding:3rem 2rem; text-align:center; color:var(--text-muted);">
+                    <ion-icon name="checkmark-circle-outline" style="font-size:3rem; opacity:0.3; margin-bottom:1rem;"></ion-icon>
+                    <p>No new registration requests.</p>
+                </div>
+            </div>
+        </div>
+
         <style>
-            @keyframes adminSpin { to { transform: rotate(360deg); } }
-            @keyframes adminFloatCard {
-                0%, 100% { transform: translateY(0px); }
-                50%       { transform: translateY(-6px); }
+            @keyframes adminNotifSlide {
+                from { opacity:0; transform: translateY(-10px) scale(0.95); }
+                to { opacity:1; transform: translateY(0) scale(1); }
             }
         </style>
 
         <!-- Monitoring Widget -->
         <h3 style="margin-bottom:1rem;font-size:1.1rem;color:var(--text-muted);">Real-Time Usage Monitoring</h3>
         <div class="usage-grid">
-            <div class="usage-card"><div class="usage-info"><div class="usage-value" id="monitorUsers">0</div><div class="usage-label">Active Users</div></div><ion-icon class="usage-icon" name="people"></ion-icon></div>
-            <div class="usage-card" style="border-left-color: var(--secondary);"><div class="usage-info"><div class="usage-value" id="monitorLands">0</div><div class="usage-label">Lands Tracked</div></div><ion-icon class="usage-icon" name="map"></ion-icon></div>
-            <div class="usage-card" style="border-left-color: #f59e0b;"><div class="usage-info"><div class="usage-value" id="monitorDb">OK</div><div class="usage-label">Database Health</div></div><ion-icon class="usage-icon" name="server"></ion-icon></div>
-            <div class="usage-card" style="border-left-color: #ef4444;"><div class="usage-info"><div class="usage-value" id="monitorAuth">Active</div><div class="usage-label">JWT Security</div></div><ion-icon class="usage-icon" name="lock-closed"></ion-icon></div>
+            <div class="usage-card">
+                <div class="usage-info">
+                    <div class="usage-value" id="monitorUsers">0</div>
+                    <div class="usage-label">Active Users</div>
+                </div><ion-icon class="usage-icon" name="people"></ion-icon>
+            </div>
+            <div class="usage-card" style="border-left-color: var(--secondary);">
+                <div class="usage-info">
+                    <div class="usage-value" id="monitorLands">0</div>
+                    <div class="usage-label">Lands Tracked</div>
+                </div><ion-icon class="usage-icon" name="map"></ion-icon>
+            </div>
+            <div class="usage-card" style="border-left-color: #f59e0b;">
+                <div class="usage-info">
+                    <div class="usage-value" id="monitorDb">OK</div>
+                    <div class="usage-label">Database Health</div>
+                </div><ion-icon class="usage-icon" name="server"></ion-icon>
+            </div>
+            <div class="usage-card" style="border-left-color: #ef4444;">
+                <div class="usage-info">
+                    <div class="usage-value" id="monitorAuth">Active</div>
+                    <div class="usage-label">JWT Security</div>
+                </div><ion-icon class="usage-icon" name="lock-closed"></ion-icon>
+            </div>
         </div>
 
         <!-- Add User Form (Hidden by default) -->
-        <div class="glass-card" id="userFormCard" style="display:none; margin-bottom: 2rem; border: 2px solid var(--primary);">
-            <h3 id="formTitle" style="margin-bottom:1rem; display:flex; gap:0.5rem; align-items:center;"><ion-icon name="person-add"></ion-icon> Add New User</h3>
+        <div class="glass-card" id="userFormCard"
+            style="display:none; margin-bottom: 2rem; border: 2px solid var(--primary);">
+            <h3 id="formTitle" style="margin-bottom:1rem; display:flex; gap:0.5rem; align-items:center;"><ion-icon
+                    name="person-add"></ion-icon> Add New User</h3>
             <form id="userForm">
                 <input type="hidden" id="userId">
-                <div class="form-grid">
-                    <div class="form-group"><label>Full Name</label><input type="text" id="fullName" required></div>
-                    <div class="form-group"><label>Email address</label><input type="email" id="email" required></div>
-                    <div class="form-group"><label>Password <span id="pwdHint" style="font-size:0.75rem;color:gray;"></span></label><input type="password" id="password" required></div>
-                    <div class="form-group"><label>Assigned Role (Access Control)</label>
-                        <select id="role">
-                            <option value="ROLE_USER">Data Entry User</option>
-                            <option value="ROLE_OFFICER">Agricultural Officer</option>
-                            <option value="ROLE_ADMIN">Administrator</option>
-                        </select>
+                <div class="form-grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <div class="input-wrap">
+                            <ion-icon name="person-outline"></ion-icon>
+                            <input type="text" id="fullName" placeholder="Alice Uwimana" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <div class="input-wrap">
+                            <ion-icon name="mail-outline"></ion-icon>
+                            <input type="email" id="email" placeholder="alice@example.com" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Password <span id="pwdHint" style="font-size:0.75rem;color:gray;"></span></label>
+                        <div class="input-wrap">
+                            <ion-icon name="lock-closed-outline"></ion-icon>
+                            <input type="password" id="password" placeholder="At least 6 characters" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm Password</label>
+                        <div class="input-wrap">
+                            <ion-icon name="shield-checkmark-outline"></ion-icon>
+                            <input type="password" id="confirmPassword" placeholder="Repeat password" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Assigned Role</label>
+                        <div class="input-wrap">
+                            <ion-icon name="briefcase-outline"></ion-icon>
+                            <select id="role">
+                                <option value="ROLE_USER">Data Entry User</option>
+                                <option value="ROLE_OFFICER">Agricultural Officer</option>
+                                <option value="ROLE_ADMIN">Administrator</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: flex-end;">
-                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('userFormCard').style.display='none'">Cancel</button>
+                    <button type="button" class="btn btn-secondary"
+                        onclick="document.getElementById('userFormCard').style.display='none'">Cancel</button>
                     <button type="submit" class="btn btn-primary">Save Changes</button>
                 </div>
             </form>
         </div>
 
         <div class="tab-nav">
-            <button class="tab-btn active" onclick="switchTab('users')"><ion-icon name="people-outline"></ion-icon> User Accounts<span id="pendingBadge" style="color:#f59e0b; font-size:.8rem;"></span></button>
-            <button class="tab-btn" onclick="switchTab('settings')"><ion-icon name="settings-outline"></ion-icon> System Settings</button>
-            <button class="tab-btn" onclick="switchTab('security')"><ion-icon name="shield-half-outline"></ion-icon> Security Logs</button>
+            <button class="tab-btn active" onclick="switchTab('users')"><ion-icon name="people-outline"></ion-icon> User
+                Accounts<span id="pendingBadge" style="color:#f59e0b; font-size:.8rem;"></span></button>
+            <button class="tab-btn" onclick="switchTab('settings')"><ion-icon name="settings-outline"></ion-icon> System
+                Settings</button>
+            <button class="tab-btn" onclick="switchTab('security')"><ion-icon name="shield-half-outline"></ion-icon>
+                Security Logs</button>
         </div>
 
         <div id="users" class="tab-panel active">
             <div class="glass-card" style="padding: 1rem 2rem;">
                 <table id="usersTable">
-                    <thead><tr>
-                        <th>ID</th>
-                        <th>User Details</th>
-                        <th>Identity Email</th>
-                        <th>Access Role</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr></thead>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>User Details</th>
+                            <th>Identity Email</th>
+                            <th>Access Role</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
                     <tbody id="usersList">
-                        <tr><td colspan="6" style="text-align:center; padding: 2rem;">Loading accounts...</td></tr>
+                        <tr>
+                            <td colspan="6" style="text-align:center; padding: 2rem;">Loading accounts...</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -329,25 +821,46 @@
             <div class="glass-card">
                 <h3 style="margin-bottom: 1.5rem;">Global Configuration</h3>
                 <div class="setting-row">
-                    <div class="setting-text"><h4>Allow Public Registrations</h4><p>When disabled, only admins can create accounts via this panel.</p></div>
-                    <label class="switch"><input type="checkbox" id="setPubReg" checked><span class="slider"></span></label>
+                    <div class="setting-text">
+                        <h4>Allow Public Registrations</h4>
+                        <p>When disabled, only admins can create accounts via this panel.</p>
+                    </div>
+                    <label class="switch"><input type="checkbox" id="setPubReg" checked><span
+                            class="slider"></span></label>
                 </div>
                 <div class="setting-row">
-                    <div class="setting-text"><h4>Maintenance Mode</h4><p>Suspend access for Data Entry Users for database maintenance.</p></div>
+                    <div class="setting-text">
+                        <h4>Maintenance Mode</h4>
+                        <p>Suspend access for Data Entry Users for database maintenance.</p>
+                    </div>
                     <label class="switch"><input type="checkbox" id="setMaint"><span class="slider"></span></label>
                 </div>
                 <div class="setting-row">
-                    <div class="setting-text"><h4>Strict Password Policy</h4><p>Enforce minimum 12-char alphanumeric passwords for new identities.</p></div>
-                    <label class="switch"><input type="checkbox" id="setPwd" checked><span class="slider"></span></label>
+                    <div class="setting-text">
+                        <h4>Strict Password Policy</h4>
+                        <p>Enforce minimum 12-char alphanumeric passwords for new identities.</p>
+                    </div>
+                    <label class="switch"><input type="checkbox" id="setPwd" checked><span
+                            class="slider"></span></label>
                 </div>
-                <div style="margin-top:2rem;"><button class="btn btn-secondary" onclick="saveSettings()">Apply Settings</button> <span id="setMsg" style="color:var(--primary); font-size: 0.85rem; margin-left:1rem; opacity:0; transition:0.3s;">Saved locally.</span></div>
+                <div style="margin-top:2rem;"><button class="btn btn-secondary" onclick="saveSettings()">Apply
+                        Settings</button> <span id="setMsg"
+                        style="color:var(--primary); font-size: 0.85rem; margin-left:1rem; opacity:0; transition:0.3s;">Saved
+                        locally.</span></div>
             </div>
         </div>
 
         <div id="security" class="tab-panel">
             <div class="glass-card" style="padding: 1rem 2rem;">
                 <table id="logsTable">
-                    <thead><tr><th>Timestamp</th><th>Event Trigger</th><th>Target Source (IP)</th><th>Status</th></tr></thead>
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Event Trigger</th>
+                            <th>Target Source (IP)</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
                     <tbody id="logsList">
                         <!-- Mocked logs for demonstration -->
                     </tbody>
@@ -380,14 +893,14 @@
                     document.getElementById('monitorUsers').innerText = stats.totalUsers || 0;
                     document.getElementById('monitorLands').innerText = stats.totalLands || 0;
                 }
-            } catch(e){}
+            } catch (e) { }
         }
 
         // Settings Logic (Local persistence)
         document.getElementById('setPubReg').checked = localStorage.getItem('setPubReg') !== 'false';
         document.getElementById('setMaint').checked = localStorage.getItem('setMaint') === 'true';
         document.getElementById('setPwd').checked = localStorage.getItem('setPwd') !== 'false';
-        
+
         window.saveSettings = () => {
             localStorage.setItem('setPubReg', document.getElementById('setPubReg').checked);
             localStorage.setItem('setMaint', document.getElementById('setMaint').checked);
@@ -413,26 +926,28 @@
                 if (res.ok) {
                     const users = await res.json();
                     renderUsers(users);
+                    updateNotifications(users);
                     document.getElementById('monitorUsers').innerText = users.length;
                 }
-            } catch (err) {}
+            } catch (err) { }
         }
         function getRoleBadge(role) {
-            if(role === 'ROLE_ADMIN')   return '<span class="role-badge role-admin">System Admin</span>';
-            if(role === 'ROLE_OFFICER') return '<span class="role-badge role-officer">Agr. Officer</span>';
+            if (role === 'ROLE_ADMIN') return '<span class="role-badge role-admin">System Admin</span>';
+            if (role === 'ROLE_OFFICER') return '<span class="role-badge role-officer">Agr. Officer</span>';
             return '<span class="role-badge role-user">Data Entry</span>';
         }
 
-        function getStatusBadge(approved) {
-            if (approved) return '<span class="status-approved"><span class="status-dot dot-green"></span> Approved</span>';
+        function getStatusBadge(status) {
+            if (status === 'APPROVED') return '<span class="status-approved"><span class="status-dot dot-green"></span> Approved</span>';
+            if (status === 'REJECTED') return '<span class="status-pending" style="background:#fee2e2; color:#991b1b;"><span class="status-dot" style="background:#ef4444;"></span> Rejected</span>';
             return '<span class="status-pending"><span class="status-dot dot-amber"></span> Pending</span>';
         }
 
         function getRoleSelector(userId, currentRole) {
             const roles = [
-                { value: 'ROLE_USER',    label: '📋 Data Entry' },
+                { value: 'ROLE_USER', label: '📋 Data Entry' },
                 { value: 'ROLE_OFFICER', label: '🌾 Agr. Officer' },
-                { value: 'ROLE_ADMIN',   label: '🔐 Admin' }
+                { value: 'ROLE_ADMIN', label: '🔐 Admin' }
             ];
             const options = roles.map(r =>
                 `<option value="${r.value}" ${r.value === currentRole ? 'selected' : ''}>${r.label}</option>`
@@ -469,32 +984,42 @@
             const tbody = document.getElementById('usersList');
             tbody.innerHTML = '';
 
-            // Sort: pending first, then approved
-            users.sort((a, b) => (a.approved === b.approved) ? 0 : a.approved ? 1 : -1);
+            // Sort: pending first, then approved, then rejected
+            users.sort((a, b) => {
+                const order = { PENDING: 0, APPROVED: 1, REJECTED: 2 };
+                return (order[a.status] || 99) - (order[b.status] || 99);
+            });
 
-            const pendingCount = users.filter(u => !u.approved).length;
+            const pendingCount = users.filter(u => u.status === 'PENDING').length;
             document.getElementById('pendingBadge').textContent = pendingCount > 0 ? ` (${pendingCount} pending)` : '';
 
             users.forEach(user => {
                 const tr = document.createElement('tr');
-                if (!user.approved) tr.style.background = 'rgba(251,191,36,0.07)';
+                if (user.status === 'PENDING') tr.style.background = 'rgba(251,191,36,0.07)';
                 const id = user.userId || user.id;
                 const safeName = user.fullName.replace(/'/g, "\\'");
 
-                const approvalBtn = !user.approved
-                    ? `<button class="btn-action btn-approve" onclick="approveUser(${id})">&#10003; Approve</button>`
-                    : `<button class="btn-action btn-suspend" onclick="suspendUser(${id})">&#9646; Suspend</button>`;
+                let approvalBtn = '';
+                if (user.status === 'PENDING') {
+                    approvalBtn = `
+                        <button class="btn-action btn-approve" onclick="approveUser(${id})">&#10003; Approve</button>
+                        <button class="btn-action btn-delete" style="background:#fff1f2; color:#be123c;" onclick="rejectUser(${id})">&#10005; Reject</button>
+                    `;
+                } else if (user.status === 'APPROVED') {
+                    approvalBtn = `<button class="btn-action btn-suspend" onclick="suspendUser(${id})">&#9646; Suspend</button>`;
+                } else if (user.status === 'REJECTED') {
+                    approvalBtn = `<button class="btn-action btn-approve" onclick="approveUser(${id})">&#10003; Approve instead</button>`;
+                }
 
                 tr.innerHTML = `
                     <td><strong style="color:var(--text-muted)">#${id}</strong></td>
                     <td style="font-weight:600; font-size:1.05rem;">${user.fullName}</td>
                     <td style="font-size:.9rem;">${user.email}</td>
                     <td>${getRoleSelector(id, user.role)}</td>
-                    <td>${getStatusBadge(user.approved)}</td>
+                    <td>${getStatusBadge(user.status)}</td>
                     <td>
                         ${approvalBtn}
                         <button class="btn-action btn-edit" onclick="editUser(${id}, '${safeName}', '${user.email}', '${user.role}')">Edit</button>
-                        <button class="btn-action btn-delete" onclick="deleteUser(${id})">Delete</button>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -519,6 +1044,62 @@
             } catch { showToast('Network error.', 'error'); }
         };
 
+        window.rejectUser = async (id) => {
+            const reason = prompt('Enter rejection reason (optional):', 'Requirements not met');
+            if (reason === null) return;
+            try {
+                const res = await fetch(`${API_URL}/${id}/reject`, {
+                    method: 'PUT',
+                    headers,
+                    body: JSON.stringify({ reason })
+                });
+                if (res.ok) { 
+                    showToast('User registration rejected.', 'warn'); 
+                    fetchUsers(); 
+                } else { showToast('Failed to reject user.', 'error'); }
+            } catch { showToast('Network error.', 'error'); }
+        };
+
+        /* ── Notifications Logic ── */
+        document.getElementById('notifTrigger').onclick = () => {
+            const p = document.getElementById('notifPanel');
+            p.style.display = p.style.display === 'none' ? 'block' : 'none';
+        };
+
+        function updateNotifications(users) {
+            const pending = users.filter(u => u.status === 'PENDING');
+            const badge = document.getElementById('notifBadge');
+            const list = document.getElementById('notifList');
+            
+            if (pending.length > 0) {
+                badge.innerText = pending.length;
+                badge.style.display = 'block';
+                
+                list.innerHTML = pending.map(u => `
+                    <div style="padding:1rem; border-bottom:1px solid #f1f5f9; display:flex; flex-direction:column; gap:0.75rem; background:rgba(16,185,129,0.03);">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                            <div>
+                                <div style="font-weight:700; color:var(--text-main);">${u.fullName}</div>
+                                <div style="font-size:0.8rem; color:var(--text-muted);">${u.email}</div>
+                            </div>
+                            <span style="font-size:0.65rem; font-weight:700; text-transform:uppercase; color:var(--primary);">New</span>
+                        </div>
+                        <div style="display:flex; gap:0.5rem;">
+                            <button class="btn-action btn-approve" style="flex:1; margin:0;" onclick="approveUser(${u.userId})">Approve</button>
+                            <button class="btn-action" style="flex:1; margin:0; background:#fee2e2; color:#dc2626;" onclick="rejectUser(${u.userId})">Reject</button>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                badge.style.display = 'none';
+                list.innerHTML = `
+                    <div style="padding:3rem 2rem; text-align:center; color:var(--text-muted);">
+                        <ion-icon name="checkmark-circle-outline" style="font-size:3rem; opacity:0.3; margin-bottom:1rem;"></ion-icon>
+                        <p>No new registration requests.</p>
+                    </div>`;
+            }
+        }
+
         /* ── Toast ── */
         function showToast(msg, type = 'success') {
             let t = document.getElementById('adminToast');
@@ -530,12 +1111,12 @@
             }
             const cfg = {
                 success: { bg: '#d1fae5', color: '#065f46', icon: '✓' },
-                error:   { bg: '#fee2e2', color: '#991b1b', icon: '✕' },
-                warn:    { bg: '#fef3c7', color: '#92400e', icon: '⚠' }
+                error: { bg: '#fee2e2', color: '#991b1b', icon: '✕' },
+                warn: { bg: '#fef3c7', color: '#92400e', icon: '⚠' }
             };
             const c = cfg[type] || cfg.success;
             t.style.background = c.bg;
-            t.style.color      = c.color;
+            t.style.color = c.color;
             t.innerHTML = `<strong>${c.icon}</strong> ${msg}`;
             requestAnimationFrame(() => { t.style.opacity = '1'; t.style.transform = 'translateY(0)'; });
             setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateY(20px)'; }, 3500);
@@ -545,10 +1126,11 @@
             document.getElementById('userForm').reset();
             document.getElementById('userId').value = '';
             document.getElementById('password').required = true;
+            document.getElementById('confirmPassword').required = true;
             document.getElementById('pwdHint').innerText = '';
             document.getElementById('formTitle').innerHTML = '<ion-icon name="person-add"></ion-icon> Register Identity';
             document.getElementById('userFormCard').style.display = 'block';
-            document.getElementById('userFormCard').scrollIntoView({behavior:'smooth'});
+            document.getElementById('userFormCard').scrollIntoView({ behavior: 'smooth' });
         });
 
         window.editUser = (id, name, email, role) => {
@@ -557,24 +1139,34 @@
             document.getElementById('email').value = email;
             document.getElementById('role').value = role || 'ROLE_USER';
             document.getElementById('password').required = false;
+            document.getElementById('confirmPassword').required = false;
             document.getElementById('pwdHint').innerText = '(Leave blank to retain password)';
             document.getElementById('formTitle').innerHTML = '<ion-icon name="create"></ion-icon> Update Identity Privileges';
             document.getElementById('userFormCard').style.display = 'block';
-            document.getElementById('userFormCard').scrollIntoView({behavior:'smooth'});
+            document.getElementById('userFormCard').scrollIntoView({ behavior: 'smooth' });
         };
 
         document.getElementById('userForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const id = document.getElementById('userId').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (password && password !== confirmPassword) {
+                showToast('Passwords do not match.', 'error');
+                return;
+            }
+
             const data = {
                 fullName: document.getElementById('fullName').value,
-                email:    document.getElementById('email').value,
-                password: document.getElementById('password').value,
-                role:     document.getElementById('role').value
+                email: document.getElementById('email').value,
+                password: password,
+                confirmPassword: confirmPassword,
+                role: document.getElementById('role').value
             };
             const isUpdate = !!id;
             // New users created by admin → auto-approved (no OTP required)
-            const url    = isUpdate ? `${API_URL}/${id}` : `${API_URL}/admin-create`;
+            const url = isUpdate ? `${API_URL}/${id}` : `${API_URL}/admin-create`;
             const method = isUpdate ? 'PUT' : 'POST';
             try {
                 const res = await fetch(url, { method, headers, body: JSON.stringify(data) });
@@ -590,7 +1182,7 @@
         });
 
         window.deleteUser = async (id) => {
-            if(!confirm('Are you certain you want to revoke this identity entirely?')) return;
+            if (!confirm('Are you certain you want to revoke this identity entirely?')) return;
             try {
                 const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE', headers });
                 if (res.ok) { fetchUsers(); fetchMonitor(); } else { alert('Error revoking identity'); }
@@ -606,4 +1198,5 @@
         fetchUsers(); fetchMonitor();
     </script>
 </body>
+
 </html>

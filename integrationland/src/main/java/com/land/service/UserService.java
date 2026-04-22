@@ -20,6 +20,16 @@ public class UserService {
 
     /** Self-registration via OTP — account starts as NOT approved */
     public User registerUser(RegisterRequest request) {
+        // Validation: Passwords match
+        if (!request.getPassword().equals(request.getConfirmPassword())) {
+            throw new RuntimeException("Passwords do not match");
+        }
+
+        // Security: Block self-registration as ADMIN
+        if ("ROLE_ADMIN".equalsIgnoreCase(request.getRole())) {
+            throw new RuntimeException("Unauthorized: Self-registration as Administrator is not permitted.");
+        }
+
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new RuntimeException("Email already in use");
         }

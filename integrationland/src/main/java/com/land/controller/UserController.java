@@ -50,6 +50,14 @@ public class UserController {
         return ResponseEntity.ok(userService.revokeUser(id));
     }
 
+    /** Admin rejects a pending user with a reason */
+    @PutMapping("/{id}/reject")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<User> rejectUser(@PathVariable Long id, @RequestBody java.util.Map<String, String> body) {
+        String reason = body.get("reason");
+        return ResponseEntity.ok(userService.rejectUser(id, reason));
+    }
+
     /** Admin changes a user's role inline */
     @PutMapping("/{id}/role")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")

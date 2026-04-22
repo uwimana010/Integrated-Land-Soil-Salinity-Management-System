@@ -20,8 +20,9 @@ public class RegisterRequest {
     private String password;
 
     @NotBlank
-    private String role; // ROLE_ADMIN, ROLE_OFFICER, ROLE_USER
+    @Size(min = 6, max = 255)
+    private String confirmPassword;
 
     @NotBlank
-    private String otp; // 6-digit OTP from email
+    private String role; // ROLE_ADMIN, ROLE_OFFICER, ROLE_USER
 }
