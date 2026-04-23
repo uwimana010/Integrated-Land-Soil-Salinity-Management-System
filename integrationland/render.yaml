@@ -9,7 +9,7 @@ services:
     name: integrationland
     runtime: docker
     dockerContext: integrationland
-    dockerfile: Dockerfile
+    dockerfilePath: Dockerfile
     plan: free
     envVars:
       - key: DB_HOST
