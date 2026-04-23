@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: integrationland
+    runtime: docker
+    plan: free # Change to starter if you need more memory
+    envVars:
+      - key: DATABASE_URL
+        description: "JDBC URL for your MySQL database (e.g. jdbc:mysql://host:port/db)"
+      - key: DATABASE_USER
+        sync: false
+      - key: DATABASE_PASSWORD
+        sync: false
+      - key: MAIL_USERNAME
+        description: "Your Gmail address for OTP"
+      - key: MAIL_PASSWORD
+        description: "Your Gmail App Password"
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: JAVA_OPTS
+        value: "-Xmx384m -Xms384m" # Recommended for Free tier (512MB RAM)
