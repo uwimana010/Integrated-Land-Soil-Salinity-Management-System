@@ -1,18 +1,17 @@
-CREATE DATABASE IF NOT EXISTS land_soil_system;
-USE land_soil_system;
+-- Integrationland PostgreSQL Schema
 
-CREATE TABLE users (
-    user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS users (
+    user_id BIGSERIAL PRIMARY KEY,
     full_name VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     role VARCHAR(50) NOT NULL,
-    approved TINYINT(1) NOT NULL DEFAULT 0,
+    approved BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE land (
-    land_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS land (
+    land_id BIGSERIAL PRIMARY KEY,
     location VARCHAR(255) NOT NULL,
     size FLOAT NOT NULL,
     land_type VARCHAR(100),
@@ -20,8 +19,8 @@ CREATE TABLE land (
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
-CREATE TABLE soil_data (
-    soil_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS soil_data (
+    soil_id BIGSERIAL PRIMARY KEY,
     soil_type VARCHAR(100),
     moisture_level FLOAT,
     nutrient_level FLOAT,
@@ -31,15 +30,15 @@ CREATE TABLE soil_data (
     FOREIGN KEY (land_id) REFERENCES land(land_id)
 );
 
-CREATE TABLE crop (
-    crop_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS crop (
+    crop_id BIGSERIAL PRIMARY KEY,
     crop_name VARCHAR(100) NOT NULL,
     salinity_tolerance VARCHAR(50),
     soil_requirement VARCHAR(255)
 );
 
-CREATE TABLE recommendation (
-    recommendation_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS recommendation (
+    recommendation_id BIGSERIAL PRIMARY KEY,
     recommendation_details TEXT,
     recommendation_date DATE,
     soil_id BIGINT,

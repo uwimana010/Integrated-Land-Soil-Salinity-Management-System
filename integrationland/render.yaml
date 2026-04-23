@@ -1,15 +1,35 @@
+databases:
+  - name: integrationland_db
+    databaseName: land_soil_system
+    user: admin
+    plan: free
+
 services:
   - type: web
     name: integrationland
     runtime: docker
-    plan: free # Change to starter if you need more memory
+    plan: free
     envVars:
-      - key: DATABASE_URL
-        sync: false
+      - key: DB_HOST
+        fromDatabase:
+          name: integrationland_db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: integrationland_db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: integrationland_db
+          property: database
       - key: DATABASE_USER
-        sync: false
+        fromDatabase:
+          name: integrationland_db
+          property: user
       - key: DATABASE_PASSWORD
-        sync: false
+        fromDatabase:
+          name: integrationland_db
+          property: password
       - key: MAIL_USERNAME
         sync: false
       - key: MAIL_PASSWORD
@@ -17,4 +37,4 @@ services:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
       - key: JAVA_OPTS
-        value: "-Xmx384m -Xms384m" # Recommended for Free tier (512MB RAM)
+        value: "-Xmx384m -Xms384m"
