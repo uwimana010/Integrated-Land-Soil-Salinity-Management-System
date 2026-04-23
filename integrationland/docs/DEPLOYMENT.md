@@ -50,3 +50,12 @@ If you prefer to configure the service manually:
 ## Troubleshooting
 *   **Out of Memory**: If the logs show `Killed` or `OOM`, you may need to upgrade to a "Starter" plan with 1GB RAM or further tune the JVM.
 *   **OTP Email Not Sending**: Verify that you are using a **Gmail App Password**, not your regular password.
+
+---
+
+## Admin Access
+The system automatically creates a default administrator account on first startup:
+- **Email**: `clarisseuwimana31@gmail.com`
+- **Password**: `Kimkenny@1`
+
+Use this account to log in and approve other users.
