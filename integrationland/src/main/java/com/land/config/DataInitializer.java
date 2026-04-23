@@ -17,20 +17,26 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Check if admin already exists
-        if (userRepository.findByEmail("clarisseuwimana31@gmail.com").isEmpty()) {
-            User admin = User.builder()
+        String adminEmail = "clarisseuwimana31@gmail.com";
+        User user = userRepository.findByEmail(adminEmail).orElse(null);
+
+        if (user == null) {
+            // Create new admin if doesn't exist
+            user = User.builder()
                     .fullName("System Admin")
-                    .email("clarisseuwimana31@gmail.com")
+                    .email(adminEmail)
                     .password(passwordEncoder.encode("Kimkenny@1"))
                     .role("ROLE_ADMIN")
                     .status(ApprovalStatus.APPROVED)
                     .build();
-
-            userRepository.save(admin);
-            System.out.println("✅ Admin account created: clarisseuwimana31@gmail.com / Kimkenny@1");
+            userRepository.save(user);
+            System.out.println("✅ Admin account created: " + adminEmail);
         } else {
-            System.out.println("ℹ️ Admin account already exists.");
+            // Force promote existing user to Admin and Approve them
+            user.setRole("ROLE_ADMIN");
+            user.setStatus(ApprovalStatus.APPROVED);
+            userRepository.save(user);
+            System.out.println("🚀 Existing user promoted to Admin: " + adminEmail);
         }
     }
 }
