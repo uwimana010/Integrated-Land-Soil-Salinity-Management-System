@@ -563,6 +563,13 @@
                         <span class="range-val" id="salinityDisplay">0.0</span>
                     </div>
                 </div>
+                <div class="form-group full">
+                    <label>pH Level — <strong id="phVal">7.0</strong></label>
+                    <div class="range-row">
+                        <input type="range" id="phLevel" min="0" max="14" step="0.1" value="7">
+                        <span class="range-val" id="phDisplay">7.0</span>
+                    </div>
+                </div>
             </div>
             <div class="form-actions">
                 <button type="button" class="btn btn-secondary" id="cancelSoilBtn">Cancel</button>
@@ -725,6 +732,7 @@ function bindRange(id, displayId, suffix = '') {
 bindRange('moisture', 'moistureDisplay', '%');
 bindRange('nutrient',  'nutrientDisplay', '');
 bindRange('salinity',  'salinityDisplay', '');
+bindRange('phLevel',   'phDisplay', '');
 
 /* ── Land form open / close ── */
 document.getElementById('openAddLandBtn').addEventListener('click', () => {
@@ -793,6 +801,7 @@ function openSoilForm(landId = null, editing = false) {
         document.getElementById('moisture').value = 50; document.getElementById('moistureDisplay').textContent = '50%';
         document.getElementById('nutrient').value  = 50; document.getElementById('nutrientDisplay').textContent = '50';
         document.getElementById('salinity').value  = 0;  document.getElementById('salinityDisplay').textContent = '0';
+        document.getElementById('phLevel').value   = 7;  document.getElementById('phDisplay').textContent = '7.0';
         document.getElementById('soilDate').value = new Date().toISOString().split('T')[0];
         document.getElementById('soilFormCardTitle').textContent = 'Add Soil Record';
         document.getElementById('soilSubmitBtn').innerHTML = '<ion-icon name="save-outline"></ion-icon> Save Soil Record';
@@ -817,6 +826,7 @@ window.editSoil = (id, landId, soilType, moisture, nutrient, salinity, date) => 
     document.getElementById('moisture').value = moisture; document.getElementById('moistureDisplay').textContent = moisture + '%';
     document.getElementById('nutrient').value  = nutrient; document.getElementById('nutrientDisplay').textContent = nutrient;
     document.getElementById('salinity').value  = salinity; document.getElementById('salinityDisplay').textContent = salinity;
+    document.getElementById('phLevel').value   = 7.0;      document.getElementById('phDisplay').textContent = '7.0';
     document.getElementById('soilFormCardTitle').textContent = 'Edit Soil Record';
     document.getElementById('soilSubmitBtn').innerHTML = '<ion-icon name="save-outline"></ion-icon> Update Soil Record';
     openSoilForm(landId, true);
@@ -832,6 +842,7 @@ document.getElementById('soilForm').addEventListener('submit', async e => {
         moistureLevel: parseFloat(document.getElementById('moisture').value),
         nutrientLevel: parseFloat(document.getElementById('nutrient').value),
         salinityLevel: parseFloat(document.getElementById('salinity').value),
+        phLevel:       parseFloat(document.getElementById('phLevel').value),
         recordDate:    document.getElementById('soilDate').value,
         land: { landId: parseInt(document.getElementById('soilLandId').value) }
     });
@@ -976,7 +987,7 @@ function renderSoil(filter = '') {
     <table>
       <thead><tr>
         <th>#</th><th>Land Plot</th><th>Soil Type</th><th>Moisture</th>
-        <th>Nutrients</th><th>Salinity</th><th>Date</th><th style="text-align:right;">Actions</th>
+        <th>Nutrients</th><th>Salinity</th><th>pH</th><th>Date</th><th style="text-align:right;">Actions</th>
       </tr></thead>
       <tbody>
       ${data.map((s,i) => {
@@ -996,6 +1007,7 @@ function renderSoil(filter = '') {
             <span style="font-size:.8rem;">${s.nutrientLevel}</span>
           </div></td>
           <td><span class="badge ${salinityBadge(s.salinityLevel)}">${s.salinityLevel} dS/m · ${salinityLabel(s.salinityLevel)}</span></td>
+          <td><span class="badge badge-blue">pH ${s.phLevel || '—'}</span></td>
           <td style="color:var(--text-muted); font-size:.85rem;">${s.recordDate||'—'}</td>
           <td>
             <div class="td-actions" style="justify-content:flex-end;">
