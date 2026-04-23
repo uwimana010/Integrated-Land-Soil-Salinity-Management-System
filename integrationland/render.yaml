@@ -5,15 +5,15 @@ services:
     plan: free # Change to starter if you need more memory
     envVars:
       - key: DATABASE_URL
-        description: "JDBC URL for your MySQL database (e.g. jdbc:mysql://host:port/db)"
+        sync: false
       - key: DATABASE_USER
         sync: false
       - key: DATABASE_PASSWORD
         sync: false
       - key: MAIL_USERNAME
-        description: "Your Gmail address for OTP"
+        sync: false
       - key: MAIL_PASSWORD
-        description: "Your Gmail App Password"
+        sync: false
       - key: SPRING_PROFILES_ACTIVE
         value: prod
       - key: JAVA_OPTS
