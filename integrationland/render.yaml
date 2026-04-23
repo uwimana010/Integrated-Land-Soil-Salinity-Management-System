@@ -11,6 +11,8 @@ services:
     root: integrationland
     plan: free
     envVars:
+      - key: PORT
+        value: 8080
       - key: DB_HOST
         fromDatabase:
           name: integrationland_db
